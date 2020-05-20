@@ -906,7 +906,7 @@ int main()
 	listadoVotaciones = new Votacion[nVotaciones];
 	cout << nVotaciones;
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
-
+	//hola
 	//creaBD();
 	menu();
 
