@@ -814,7 +814,7 @@ void menu()
 //	char *nombre_vot_2 = "HOLA_SOY UNA VOTACION";
 //	char *tipo ="A";
 //	char *tipo_2 = "N";
-//	int fecha_ini = 0;
+//	int fecha_ini = 0; sadvdsfsdvsdasdvsvsdvcsdv
 //	int fecha_fin = 0;
 //	int nParticipantes = 3;
 //	char * nombre1 = "Pepe";
