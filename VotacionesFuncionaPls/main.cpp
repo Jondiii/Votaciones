@@ -266,7 +266,7 @@ int firstPassThePost2(Opcion Opciones[], int cantidadOpciones){
 
 void anyadirVotacion(Votacion *vot)
 {
-    nVotaciones +=1;
+    nVotaciones ++;
     Votacion *vota = new Votacion[nVotaciones];
     for(int i = 0; i <nVotaciones-1; i++)
     {
@@ -719,7 +719,7 @@ void creaVotacion(Votacion *v)
 							insertCandidatos << v->getOpcion(i)->getVotos() << ", " << v->getId() << ");";
 							sqlite3_exec(db, insertCandidatos.str().c_str(), NULL, 0, NULL);
 						}
-
+						anyadirVotacion(v);
 						cout << "Votación creada correctamente.\n" << endl;
 						fflush(stdout);
 					} else {
@@ -752,7 +752,7 @@ void creaVotacion(Votacion *v)
 					break;
 				}
 			}
-		}
+}
 
 void guardarEnBD()
 {
