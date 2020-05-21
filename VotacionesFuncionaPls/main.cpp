@@ -27,6 +27,7 @@ static sqlite3 *db;
 
 int nVotaciones = 0;
 int nCandidatos = 0;
+int candidatosEnBD = 0;
 int contador = 0;
 
 Votacion* listadoVotaciones;
@@ -271,12 +272,16 @@ void anyadirVotacion(Votacion *vot)
     for(int i = 0; i <nVotaciones-1; i++)
     {
         vota[i] = listadoVotaciones[i];
+      //vota[i].imprimirVotacion();
     }
     vota[nVotaciones] = *vot;
+//  vota[nVotaciones].imprimirVotacion();
     listadoVotaciones = new Votacion[nVotaciones];
     for(int i = 0; i <nVotaciones; i++)
     {
-        listadoVotaciones[i] = vota[nVotaciones];
+//    	fflush(stdout);
+        listadoVotaciones[i] = vota[i];
+//      listadoVotaciones[i].imprimirVotacion();
     }
 }
 
@@ -381,6 +386,7 @@ static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName
 
 	//Se cuenta el número de candidatos de la votación correspondiente.
 	ostringstream sentencia1;
+
 	sentencia1 << "SELECT * FROM CANDIDATO WHERE ID_V = "  << data[0] << ";";
 	sqlite3_exec(db, sentencia1.str().c_str(), cuentaCandidatosBD, 0, NULL);
 
@@ -391,7 +397,7 @@ static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName
 
 	//Reseteamos el nCandidatos para poder usarlo de contador y añadimos cada candidato a la votación.
 	ostringstream sentencia2;
-
+	candidatosEnBD += nCandidatos;
 	nCandidatos = 0;
 	sentencia2 << "SELECT * FROM CANDIDATO WHERE ID_V = " << data[0] << ";";
 	sqlite3_exec(db, sentencia2.str().c_str(), anyadeCandidatosBD, 0, NULL);
@@ -643,7 +649,6 @@ void creaVotacion(Votacion *v)
 					cout << "Introduce el número de candidatos: " <<endl;
 					cin >> nCandidatos;
 					v->setNParticipantes(nCandidatos);
-
 					//IMPORTANTE: AL DECLARAR ESTO SE ESTÁN HACIENDO TANTAS OPCIONES CON EL CONSTRUCTOR
 					//VACÍO COMO nCandidatos. No hay que volver a crearlas luego.
 					opciones = new Opcion*[nCandidatos];
@@ -701,7 +706,7 @@ void creaVotacion(Votacion *v)
 					if(bNombre && bTipo && bCandidatos && bPeriodo)
 					{
 						finNuevaVotacion = true;
-						v->imprimirVotacion();
+						//v->imprimirVotacion();
 
 						ostringstream insertVotaciones;//(ID_V, NOMBRE, GANADOR, F_INI, F_FIN, TIPO_VOTACION, VOT_ABIERTA)
 						insertVotaciones << "INSERT INTO votacion VALUES (";
@@ -714,11 +719,14 @@ void creaVotacion(Votacion *v)
 						for (int i = 0; i < v->getnParticipantes(); ++i)
 						{
 							ostringstream insertCandidatos;
-							insertCandidatos << "INSERT INTO candidato (NOMBRE, VOTOS, ID_V) VALUES ('";
+							insertCandidatos << "INSERT INTO candidato VALUES (";
+							insertCandidatos << candidatosEnBD << ", '";
 							insertCandidatos << v->getOpcion(i)->getNombre() << "', ";
 							insertCandidatos << v->getOpcion(i)->getVotos() << ", " << v->getId() << ");";
 							sqlite3_exec(db, insertCandidatos.str().c_str(), NULL, 0, NULL);
+							candidatosEnBD++;
 						}
+
 						anyadirVotacion(v);
 						cout << "Votación creada correctamente.\n" << endl;
 						fflush(stdout);
@@ -904,8 +912,9 @@ int main()
 	//char* sentencia = "SELECT * FROM VOTACION;";
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", cuentaVotacionesBD, 0, NULL);
 	listadoVotaciones = new Votacion[nVotaciones];
-	cout << nVotaciones;
+	cout << "nVotaciones" << nVotaciones << endl;
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
+	cout << "candidatosEnBD: " << candidatosEnBD << endl;
 	//hola
 	//creaBD();
 	menu();
