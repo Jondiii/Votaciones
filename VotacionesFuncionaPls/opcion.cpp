@@ -6,7 +6,9 @@
  */
 
 #include "Opcion.h"
+#include "sqlite3.h"
 
+#include <sstream>
 #include <string.h>
 #include <iostream>
 using namespace std;
@@ -73,6 +75,20 @@ void Opcion::setNombre(const char* nombre)
 void Opcion::setVotos(int votos)
 {
 	this->votos = votos;
+}
+void Opcion::updateBD(int id)
+{
+	sqlite3 *db;
+	sqlite3_stmt * stmt;
+	ostringstream updateCan;
+	updateCan << "UPDATE candidato SET VOTOS = " << this->votos;
+	updateCan << " WHERE ID = " << id << " AND NOMBRE =" << this->nombre << ";";
+	if (sqlite3_open("votaciones.sql", &db) == SQLITE_OK)
+	{
+		sqlite3_exec(db, updateCan.str().c_str(), NULL, 0, NULL);
+	}
+	sqlite3_finalize(stmt);
+	sqlite3_close(db);
 }
 
 

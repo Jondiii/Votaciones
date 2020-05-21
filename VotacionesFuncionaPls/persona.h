@@ -6,6 +6,7 @@
  */
 #ifndef PERSONA_H_
 #define PERSONA_H_
+
 #include "votacion.h"
 
 class Persona

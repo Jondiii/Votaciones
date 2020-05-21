@@ -19,7 +19,6 @@ public:
 	Opcion();
 	virtual ~Opcion();
 
-
 	int getId();
 	char* getNombre();
 	int getVotos();
@@ -28,6 +27,7 @@ public:
 	void setNombre(const char* nombre);
 	void setVotos(int votos);
 
+	void updateBD(int id);
 	void incrementarVotos();
 	void imprimirOpcion();
 

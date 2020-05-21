@@ -182,11 +182,11 @@ int Votacion::terminarVot(){
         }
     }
     if (empate == 1) {
-        this->ganador = "Empate";
+        setGanador("Empate");
         this->votAbiero = false;
         return 0;
     }
-    this->ganador = opcionGuar->getNombre();
+    setGanador(opcionGuar->getNombre());
     this->votAbiero = false;
     return opcionGuar->getId();
 }
