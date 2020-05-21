@@ -274,15 +274,16 @@ void anyadirVotacion(Votacion *vot)
         vota[i] = listadoVotaciones[i];
       //vota[i].imprimirVotacion();
     }
-    vota[nVotaciones] = *vot;
+    vota[nVotaciones - 1] = *vot;
 //  vota[nVotaciones].imprimirVotacion();
-    listadoVotaciones = new Votacion[nVotaciones];
-    for(int i = 0; i <nVotaciones; i++)
-    {
-//    	fflush(stdout);
-        listadoVotaciones[i] = vota[i];
-//      listadoVotaciones[i].imprimirVotacion();
-    }
+    listadoVotaciones = vota;
+
+//    for(int i = 0; i <nVotaciones; i++)
+//    {
+////    	fflush(stdout);
+//        listadoVotaciones[i] = vota[i];
+////      listadoVotaciones[i].imprimirVotacion();
+//    }
 }
 
 void creaBD()
@@ -294,17 +295,9 @@ void creaBD()
 		}
 	else
 	{//callback: https://stackoverflow.com/questions/31146713/sqlite3-exec-callback-function-clarification/31168999
-		char* sentencia = "CREATE TABLE VOTACION("
-		      "ID_V INT PRIMARY KEY NOT NULL,"
-		      "NOMBRE TEXT,"
-		      "GANADOR CHAR(30),"
-		      "F_INI CHAR(10),"	//AAAA/MM/DD
-		      "F_FIN CHAR(10)," //AAAA/MM/DD
-		      "TIPO_VOTACION CAHR(20),"
-		      "CHECK (F_INI<F_FIN)"
-		      ");";
+		char* sentencia;
 
-		sqlite3_exec(db, "CREATE TABLE VOTACION("
+		sqlite3_exec(db, "CREATE TABLE IF NOT EXISTS VOTACION("
 			      "ID_V INT PRIMARY KEY NOT NULL,"
 			      "NOMBRE TEXT,"
 			      "GANADOR CHAR(30),"
@@ -315,7 +308,7 @@ void creaBD()
 			      "CHECK (F_INI<F_FIN)"
 			      ");", NULL, 0, &error);
 
-		sentencia = "CREATE TABLE CANDIDATO("
+		sentencia = "CREATE TABLE IF NOT EXISTS CANDIDATO("
 				      "ID_C INT PRIMARY KEY NOT NULL,"
 				      "NOMBRE CHAR(30),"
 					  "VOTOS INT DEFAULT 0,"
@@ -325,7 +318,7 @@ void creaBD()
 
 		sqlite3_exec(db, sentencia, NULL, 0, &error);
 
-		sentencia = "CREATE TABLE PERSONA("
+		sentencia = "CREATE TABLE IF NOT EXISTS PERSONA("
 				      "ID_P INT PRIMARY KEY NOT NULL,"//Este sería el DNI de la persona.
 				      "EDAD INT,"
 				      "CP CHAR(6),"
@@ -335,7 +328,7 @@ void creaBD()
 
 		sqlite3_exec(db, sentencia, NULL, 0, &error);
 
-		sentencia = "CREATE TABLE VOTOS("//Interesa saber si una persona ha votado en una votación concreta.
+		sentencia = "CREATE TABLE IF NOT EXISTS VOTOS("//Interesa saber si una persona ha votado en una votación concreta.
 				      "ID_V INT NOT NULL,"
 				      "ID_P INT NOT NULL,"
 				      "FOREIGN KEY (ID_V) REFERENCES VOTACION(ID_V),"
@@ -386,7 +379,6 @@ static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName
 
 	//Se cuenta el número de candidatos de la votación correspondiente.
 	ostringstream sentencia1;
-
 	sentencia1 << "SELECT * FROM CANDIDATO WHERE ID_V = "  << data[0] << ";";
 	sqlite3_exec(db, sentencia1.str().c_str(), cuentaCandidatosBD, 0, NULL);
 
@@ -728,8 +720,10 @@ void creaVotacion(Votacion *v)
 						}
 
 						anyadirVotacion(v);
+
 						cout << "Votación creada correctamente.\n" << endl;
 						fflush(stdout);
+
 					} else {
 						cout << "Aún falta: ";
 						if(bNombre == false)
@@ -775,7 +769,6 @@ void guardarEnBD()
 
 void votar()
 {
-
     int dni;
     cout << "Introduce tu identificativo:(dni)" << endl;
     cin >> dni;
@@ -791,13 +784,14 @@ void votar()
     cin >> cod;
     p1.setCodigo(cod);
 
+    listadoVotaciones[nVotaciones - 1].imprimirVotacion();
     cout << "Elegir votación: (Introduce el numero de la votacion en la que desee participar)" << endl;
     for (int i = 0; i< nVotaciones;i++)
     {
         cout << i + 1 <<". ";
         listadoVotaciones[i].imprimirVotacion();
-
     }
+
     int votacion_elegida;
     cin >> votacion_elegida;
     votacion_elegida -= 1;
@@ -808,7 +802,7 @@ void votar()
     }
 
     listadoVotaciones[votacion_elegida].votar();
-    p1.insertarPersonaDB( listadoVotaciones[votacion_elegida].getId());
+    p1.insertarPersonaDB(listadoVotaciones[votacion_elegida].getId());
 }
 
 void menu()
@@ -858,6 +852,7 @@ void menu()
 
 	Votacion* vot = new Votacion();
 	vot->setId(nVotaciones);
+
 	bool finPrograma = false;
 	while(!finPrograma)
 		{

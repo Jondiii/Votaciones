@@ -11,9 +11,9 @@
 class Opcion{
 	int id;
 	int votos;
-
-public:
 	char* nombre;
+public:
+
 	Opcion(int id, int votos, const char* nombre);
 	Opcion(const Opcion& opcion);
 	Opcion();
