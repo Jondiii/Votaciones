@@ -60,7 +60,7 @@ void Opcion::incrementarVotos()
 }
 void Opcion::imprimirOpcion()
 {
-    cout << " ID: [ "<< this->id << " ]  Nombre: " << this->nombre << " ( " <<  this->votos  << " votos )" << " " << endl;
+    cout << " ID: [ "<< this->id << " ]  Nombre: " << this->nombre << " " << endl;
 }
 
 void Opcion::setId(int id)

@@ -30,6 +30,7 @@ public:
 	void setParticipantes(Opcion* opciones[]);
 	void setTipoVotacion(const char* tipoVotacion);
 	void setOpcion(Opcion op, int num);
+	void setVotAbierto(bool si);
 
 	char* getTipoVotacion();
 	Opcion* getOpcion(int i);

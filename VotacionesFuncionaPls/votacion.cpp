@@ -120,6 +120,10 @@ void Votacion::setId(int id)
 {
 	this->id = id;
 }
+void Votacion::setVotAbierto(bool si)
+{
+	this->votAbiero = si;
+}
 void Votacion::setFecha_fin(int fecha_fin)
 {
 	this->fecha_fin = fecha_fin;

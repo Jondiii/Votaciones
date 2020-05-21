@@ -132,7 +132,7 @@ static int cuentaCandidatosBD(void *unused, int nCols, char **data, char **colNa
 static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colName)
 {
 	Opcion* op = new Opcion();
-	op->setId(nCandidatos);
+	op->setId(nCandidatos + 1);
 	op->setNombre(data[1]);
 	op->setVotos(std::stoi(data[2]));
 	listadoVotaciones[contador]->getOpciones()[nCandidatos] = op;
@@ -161,6 +161,8 @@ static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName
 		vot->setFecha_inicio(std::stoi(data[3]));
 		vot->setFecha_fin(std::stoi(data[4]));
 		vot->setTipoVotacion(data[5]);
+		if(std::stoi(data[6]) == 0) vot->setVotAbierto(false);
+		if(std::stoi(data[6]) == 1) vot->setVotAbierto(true);
 		listadoVotaciones[contador] = vot;
 	} else
 	{
@@ -171,6 +173,8 @@ static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName
 		vot->setFecha_inicio(std::stoi(data[3]));
 		vot->setFecha_fin(std::stoi(data[4]));
 		vot->setTipoVotacion(data[5]);
+		if(std::stoi(data[6]) == 0) vot->setVotAbierto(false);
+		if(std::stoi(data[6]) == 1) vot->setVotAbierto(true);
 		listadoVotaciones[contador] = vot;
 	}
 
@@ -270,11 +274,11 @@ void recuento()
 		 cin >> numPers;
 		 for(int i = 0; i < numPers; i++)
 		 {
-			 ord = 0;
-			 cout << "Persona nº "<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas y un espacio, usando sus IDs." << endl;
-			 for (int o = 0; o < numCand; o++){
-				 cout << nombres[o] << " tiene el ID " << o + 1 << "." << endl;
-			 }
+			ord = 0;
+			cout << "Persona nº "<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas y un espacio, usando sus IDs." << endl;
+			for (int o = 0; o < numCand; o++){
+			cout << nombres[o] << " tiene el ID " << o + 1 << "." << endl;
+		 }
 			 fflush(stdin);
 			 getline (cin, orden);
 
@@ -639,7 +643,7 @@ void menu()
 			switch (key)
 			{
 			case 1:
-				cout << "Elige el método de votación:\n1.First Pass The Post\n2. Segunda Instantánea" << endl;
+				cout << "Elige el método de votación:\n1. First Pass The Post\n2. Segunda Instantánea" << endl;
 				cin >> tipoVot;
 
 				if(tipoVot == 1)
@@ -714,6 +718,7 @@ int main()
 
 		listadoVotaciones[i]->setNParticipantes(nCandidatos);
 		candidatosTotales += nCandidatos;
+
 		nCandidatos = 0;
 		sqlite3_exec(db, sentencia1.str().c_str(), anyadeCandidatosBD, 0, NULL);
 		contador++;
