@@ -409,10 +409,10 @@ void historial()
         numero -=1;
 
         if(!listadoVotaciones[numero]->getVotAbierta())
-          {
+        {
           	cout << "La votación ya está cerrrada." << endl;
           	return;
-          }
+        }
 
         idGanador = listadoVotaciones[numero]->terminarVot();
         listadoVotaciones[numero]->setGanador(listadoVotaciones[numero]->getOpcion(idGanador)->getNombre());
