@@ -103,6 +103,10 @@ Opcion* Votacion::getOpcion(int i)
 {
 	return this->participantes[i];
 }
+bool Votacion::getVotAbierta()
+{
+	return this->votAbiero;
+}
 void Votacion::setNParticipantes(int numero)
 {
 	this->nParticipantes = numero;
@@ -163,11 +167,6 @@ void Votacion::imprimirVotacion()
 }
 void Votacion::votar()
 {
-	if (!this->votAbiero)
-	    {
-	        cout << "La Votacion ya esta cerrada"<<endl;
-	        return;
-	    }
 	cout << "PARTICIPANTES: " << endl;
 	for (int i = 0; i< this->getnParticipantes() ;i++)
 	{

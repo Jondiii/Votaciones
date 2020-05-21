@@ -79,11 +79,6 @@ void VotacionAlter::anadirvAlternativo(vAlternativo *alternativo)
 }
 void VotacionAlter::votar()
 {
-	if (!this->votAbiero)
-	{
-		cout << "La Votacion ya esta cerrada"<<endl;
-		return;
-	}
 	cout << "PARTICIPANTES:" << endl;
 	for (int i = 0; i< this->getnParticipantes() ;i++)
 	{

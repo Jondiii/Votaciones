@@ -407,6 +407,13 @@ void historial()
         cout << "¿Qué votacion deseas cerrar? \n" << endl;
         cin >> numero;
         numero -=1;
+
+        if(!listadoVotaciones[numero]->getVotAbierta())
+          {
+          	cout << "La votación ya está cerrrada." << endl;
+          	return;
+          }
+
         idGanador = listadoVotaciones[numero]->terminarVot();
         listadoVotaciones[numero]->setGanador(listadoVotaciones[numero]->getOpcion(idGanador)->getNombre());
         cout << "Ha ganado: " << listadoVotaciones[numero]->getGanador() << "." << endl;
@@ -617,6 +624,13 @@ void votar()
     int votacion_elegida;
     cin >> votacion_elegida;
     votacion_elegida -= 1;
+
+    if(!listadoVotaciones[votacion_elegida]->getVotAbierta())
+    {
+    	cout << "La votación ya está cerrrada." << endl;
+    	return;
+    }
+
     if (!Persona::comprobarDni(p1.getDni(), listadoVotaciones[votacion_elegida]->getId()))
     {
         cout << "Ya has votado en esta votación."<<endl;

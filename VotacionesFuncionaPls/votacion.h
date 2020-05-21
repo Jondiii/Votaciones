@@ -41,6 +41,7 @@ public:
 	int getFecha_inicio();
 	int getFecha_fin();
 	Opcion** getOpciones();
+	bool getVotAbierta();
 
 	virtual void votar();
 	virtual int terminarVot();
