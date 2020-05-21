@@ -376,15 +376,28 @@ static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colNa
  */
 static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName)
 {
-	Votacion *vot = new Votacion();
-	vot->setId(std::stoi(data[0]));
-	vot->setNombreVotacion(data[1]);
-	vot->setGanador(data[2]);
-	vot->setFecha_inicio(std::stoi(data[3]));
-	vot->setFecha_fin(std::stoi(data[4]));
-	vot->setTipoVotacion(data[5]);
+	if (strcmp("N", data[5]) == 0)
+	{
+		Votacion *vot = new Votacion();
+		vot->setId(std::stoi(data[0]));
+		vot->setNombreVotacion(data[1]);
+		vot->setGanador(data[2]);
+		vot->setFecha_inicio(std::stoi(data[3]));
+		vot->setFecha_fin(std::stoi(data[4]));
+		vot->setTipoVotacion(data[5]);
+		listadoVotaciones[contador] = vot;
+	} else
+	{
+		VotacionAlter *vot = new VotacionAlter();
+		vot->setId(std::stoi(data[0]));
+		vot->setNombreVotacion(data[1]);
+		vot->setGanador(data[2]);
+		vot->setFecha_inicio(std::stoi(data[3]));
+		vot->setFecha_fin(std::stoi(data[4]));
+		vot->setTipoVotacion(data[5]);
+		listadoVotaciones[contador] = vot;
+	}
 
-	listadoVotaciones[contador] = vot;
 	contador++;
 	return 0;
 }
@@ -908,7 +921,6 @@ int main()
 		contador++;
 		nCandidatos = 0;
 	}
-
 	cout << "candidatosTotales: " << candidatosTotales << endl;
 
 	creaBD();

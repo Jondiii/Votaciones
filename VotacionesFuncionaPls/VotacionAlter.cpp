@@ -83,6 +83,7 @@ void VotacionAlter::votar()
 		cout << "Opcion "<< i + 1 << " : ";
 		cin >> numero;
 		numero -= 1;
+		votos[i] = numero;
 	}
 	vAlternativo *v1 = new vAlternativo(votos, 0, this->getnParticipantes());
 	this->anadirvAlternativo(v1);
