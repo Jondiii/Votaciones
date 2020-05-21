@@ -104,6 +104,7 @@ Opcion* Votacion::getOpcion(int i)
 void Votacion::setNParticipantes(int numero)
 {
 	this->nParticipantes = numero;
+	this->participantes = new Opcion*[numero];
 }
 void Votacion::setParticipantes(Opcion* opciones[])
 {

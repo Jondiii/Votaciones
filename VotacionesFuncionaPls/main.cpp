@@ -16,6 +16,7 @@ extern "C" {
 #include "votacion.h"
 #include "VotacionAlter.h"
 
+#include <unistd.h>
 #include <sstream>
 #include <iostream>
 #include <string.h>
@@ -27,7 +28,7 @@ static sqlite3 *db;
 
 int nVotaciones = 0;
 int nCandidatos = 0;
-int candidatosEnBD = 0;
+int candidatosTotales = 0;
 int contador = 0;
 
 Votacion* listadoVotaciones;
@@ -353,10 +354,14 @@ static int cuentaCandidatosBD(void *unused, int nCols, char **data, char **colNa
 
 static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colName)
 {
-	listadoVotaciones[contador].getOpcion(nCandidatos)->setId(nCandidatos);
-	listadoVotaciones[contador].getOpcion(nCandidatos)->setNombre(data[1]);
-	listadoVotaciones[contador].getOpcion(nCandidatos)->setVotos(std::stoi(data[2]));
+	Opcion* op = new Opcion();
+	op->setId(nCandidatos);
+	op->setNombre(data[1]);
+	op->setVotos(std::stoi(data[2]));
+	listadoVotaciones[contador].getOpciones()[nCandidatos] = op;
+
 	nCandidatos++;
+
 	return 0;
 }
 
@@ -377,27 +382,7 @@ static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName
 	listadoVotaciones[contador].setFecha_fin(std::stoi(data[4]));
 	listadoVotaciones[contador].setTipoVotacion(data[5]);
 
-	//Se cuenta el número de candidatos de la votación correspondiente.
-	ostringstream sentencia1;
-	sentencia1 << "SELECT * FROM CANDIDATO WHERE ID_V = "  << data[0] << ";";
-	sqlite3_exec(db, sentencia1.str().c_str(), cuentaCandidatosBD, 0, NULL);
-
-	//Asignamos el espacio que les corresponde en la votación y reservamos el espacio.
-	listadoVotaciones[contador].setNParticipantes(nCandidatos);
-	Opcion** candidatos = new Opcion*[nCandidatos];
-	listadoVotaciones[contador].setParticipantes(candidatos);
-
-	//Reseteamos el nCandidatos para poder usarlo de contador y añadimos cada candidato a la votación.
-	ostringstream sentencia2;
-	candidatosEnBD += nCandidatos;
-	nCandidatos = 0;
-	sentencia2 << "SELECT * FROM CANDIDATO WHERE ID_V = " << data[0] << ";";
-	sqlite3_exec(db, sentencia2.str().c_str(), anyadeCandidatosBD, 0, NULL);
-
-	nCandidatos = 0;
-
 	contador++;
-
 	return 0;
 }
 
@@ -475,7 +460,6 @@ void recuento() {
 
 bool comprobarFecha(/*char*/ string stringf)
 {
-
 	// int f_size = sizeof(f) / sizeof(char);
 	// string stringf = convertToString(f, f_size);
 
@@ -546,7 +530,7 @@ void historial()
 
     switch (numero) {
     case 1:
-        for (int i = 0; nVotaciones; i++){
+        for (int i = 0; i < nVotaciones; i++){
             cout << i + 1 <<". ";
             listadoVotaciones[i].imprimirVotacion();
         }
@@ -574,7 +558,7 @@ void historial()
         break;
 
     default:
-        cout <<"Introduzca una opción Dentro del rango"<< endl;
+        cout <<"Introduzca una opción dentro del rango"<< endl;
 
     }
 }
@@ -712,11 +696,11 @@ void creaVotacion(Votacion *v)
 						{
 							ostringstream insertCandidatos;
 							insertCandidatos << "INSERT INTO candidato VALUES (";
-							insertCandidatos << candidatosEnBD << ", '";
+							insertCandidatos << candidatosTotales << ", '";
 							insertCandidatos << v->getOpcion(i)->getNombre() << "', ";
 							insertCandidatos << v->getOpcion(i)->getVotos() << ", " << v->getId() << ");";
 							sqlite3_exec(db, insertCandidatos.str().c_str(), NULL, 0, NULL);
-							candidatosEnBD++;
+							candidatosTotales++;
 						}
 
 						anyadirVotacion(v);
@@ -784,8 +768,9 @@ void votar()
     cin >> cod;
     p1.setCodigo(cod);
 
-    listadoVotaciones[nVotaciones - 1].imprimirVotacion();
+    //listadoVotaciones[nVotaciones - 1].imprimirVotacion();
     cout << "Elegir votación: (Introduce el numero de la votacion en la que desee participar)" << endl;
+
     for (int i = 0; i< nVotaciones;i++)
     {
         cout << i + 1 <<". ";
@@ -904,14 +889,33 @@ int main()
 	cout << "Base de datos abierta correctamente\n" << endl;
 	}
 
-	//char* sentencia = "SELECT * FROM VOTACION;";
+	//Cuenta cuántas votaciones hay en la BD.
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", cuentaVotacionesBD, 0, NULL);
 	listadoVotaciones = new Votacion[nVotaciones];
-	cout << "nVotaciones" << nVotaciones << endl;
+
+	cout << "nVotaciones: " << nVotaciones << endl;
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
-	cout << "candidatosEnBD: " << candidatosEnBD << endl;
+
+	contador = 0;
+	//sqlite3_exec(db, "SELECT * FROM CANDIDATO WHERE ID_VOT = 0", cuentaCandidatosBD, 0, NULL);
+	for (int i = 0; i < nVotaciones; ++i)
+	{
+		ostringstream sentencia1;
+		sentencia1 << "SELECT * FROM CANDIDATO WHERE ID_VOT = "  << i << ";";
+		sqlite3_exec(db, sentencia1.str().c_str(), cuentaCandidatosBD, 0, NULL);
+
+		listadoVotaciones[i].setNParticipantes(nCandidatos);
+		candidatosTotales += nCandidatos;
+		nCandidatos = 0;
+		sqlite3_exec(db, sentencia1.str().c_str(), anyadeCandidatosBD, 0, NULL);
+		contador++;
+		nCandidatos = 0;
+	}
+
+	cout << "candidatosTotales: " << candidatosTotales << endl;
+
 	//hola
-	//creaBD();
+	creaBD();
 	menu();
 
 	sqlite3_close(db);

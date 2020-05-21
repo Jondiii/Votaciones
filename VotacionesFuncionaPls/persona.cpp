@@ -99,8 +99,8 @@ void Persona::insertarPersonaDB(int id)
     if (sqlite3_open("votaciones.sql", &db) == SQLITE_OK)
     {
         sqlite3_prepare( db, "SELECT ID_P from perosna;", -1, &stmt_2, NULL );
-        int rc = sqlite3_step( stmt );
-        int ncols = sqlite3_column_count(stmt);
+        int rc = sqlite3_step( stmt_2 );
+        int ncols = sqlite3_column_count(stmt_2);
         while(rc == SQLITE_ROW)
         {
             for(int i=0; i < ncols; i++)
