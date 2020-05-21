@@ -479,7 +479,7 @@ void recuento() {
     }
      if (metodo == 2){
     	 string orden;
-    	 vAlternativo* listaVotos = new vAlternativo[numCand];
+    	 vAlternativo** listaVotos = new vAlternativo*[numCand];
     	 int x = 0;
     	 int* listaOrden = new int[numCand];
     	 int numPers;
@@ -513,34 +513,35 @@ void recuento() {
     		 geek >> x;
     		 listaOrden[ord] = x;
 
-    		 vAlternativo voto = vAlternativo(listaOrden, 0, numCand);
+    		 vAlternativo *voto = new vAlternativo(listaOrden, 0, numCand);
     		 listaVotos[i] = voto;
 
     	 }
     	 for (i = 0; i < numPers ; i++ ){
-    		 listaVotos[i].imprimirValternativo(numCand);
+    		 listaVotos[i]->imprimirValternativo(numCand);
     	 }
-    	 Opcion* listaOp = new Opcion[numCand];
-    	 VotacionAlter votAlt;
-    	 votAlt.setId(nVotaciones + 1);
-    	 votAlt.setFecha_inicio(0);
-    	 votAlt.setFecha_fin(0);
-    	 votAlt.setTipoVotacion("A");
-    	 votAlt.setNombreVotacion("Recuento Manual");
-    	 votAlt.setNParticipantes(numCand);
-    	 votAlt.setParticipantes(&listaOp);
-    	 votAlt.setNum_VA(numPers);
-    	 votAlt.setAlternativos(&listaVotos);
+    	 Opcion** listaOp = new Opcion*[numCand];
+    	 VotacionAlter* votAlt = new VotacionAlter();
+    	 votAlt->setId(nVotaciones + 1);
+    	 votAlt->setFecha_inicio(0);
+    	 votAlt->setFecha_fin(0);
+    	 votAlt->setTipoVotacion("A");
+    	 votAlt->setNombreVotacion("Recuento Manual");
+    	 votAlt->setNParticipantes(numCand);
+    	 votAlt->setParticipantes(listaOp);
+    	 votAlt->setNum_VA(numPers);
+    	 votAlt->setAlternativos(listaVotos);
 
-    	 for (i = 0; i < numPers ; i++ ){
-    	     		 listaVotos[i].imprimirValternativo(numCand);
-    	     	 }
-
-//    	 for(i = 0; i < numPers; i++){
-//    		 votAlt.getAlternativo(i)->imprimirValternativo(numCand);
+//    	 for (i = 0; i < numPers ; i++ )
+//    	 {
+//    		 listaVotos[i].imprimirValternativo(numCand);
 //    	 }
-    	// int ganante = votAlt.terminarVot();
-    	// cout << "Ha ganado: " << nombres[ganante - 1 ] << ", con ID: " << ganante - 1 << endl;
+
+    	 for(i = 0; i < numPers; i++){
+    		 votAlt->getAlternativo(i)->imprimirValternativo(numCand);
+    	 }
+    	 int ganante = votAlt->terminarVot();
+    	 cout << "Ha ganado: " << nombres[ganante - 1 ] << ", con ID: " << ganante - 1 << endl;
     	 delete[] listaOp;
 
 
