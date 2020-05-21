@@ -27,14 +27,6 @@ public:
 	vAlternativo* getAlternativo(int i);
 	void anadirvAlternativo(vAlternativo *alternativo);
 
-	void setId(int id);
-	void setNombreVotacion(const char* nombreVotacion);
-	void setFecha_inicio(int fecha_inicio);
-	void setFecha_fin(int fecha_fin);
-	void setNParticipantes(int numero);
-	void setParticipantes(Opcion* opciones[]);
-	void setTipoVotacion(const char* tipoVotacion);
-	void setOpcion(Opcion op, int num);
 	void setNumVotantes(int votantes);
 	void setAlternativos(vAlternativo* alternativo[]);
 

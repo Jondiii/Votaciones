@@ -48,18 +48,7 @@ vAlternativo* VotacionAlter::getAlternativo(int i)
 {
 	return this->alternativos[i];
 }
-void VotacionAlter::setNParticipantes(int numero)
-{
-	this->nParticipantes = numero;
-}
-void VotacionAlter::setParticipantes(Opcion* opciones[])
-{
-	this->participantes = new Opcion*[this->nParticipantes];
-	for (int i = 0;  i <this->nParticipantes; i ++)
-	{
-		this->participantes[i] = opciones[i];
-	}
-}
+
 void VotacionAlter::setAlternativos(vAlternativo* alternativo[])
 {
 	this->alternativos = new vAlternativo*[this->nParticipantes];
@@ -71,29 +60,7 @@ void VotacionAlter::setAlternativos(vAlternativo* alternativo[])
 void VotacionAlter::setNumVotantes(int numero){
 	this-> numVotantes = numero;
 }
-void VotacionAlter::setId(int id)
-{
-	this->id = id;
-}
-void VotacionAlter::setFecha_fin(int fecha_fin)
-{
-	this->fecha_fin = fecha_fin;
-}
-void VotacionAlter::setFecha_inicio(int fecha_inicio)
-{
-	this->fecha_inicio = fecha_inicio;
-}
-void VotacionAlter::setTipoVotacion(const char* tipoVotacion)
-{
-	this->tipoVotacion = new char [strlen(tipoVotacion)+1];
-	strcpy(this->tipoVotacion, tipoVotacion);
-}
 
-void VotacionAlter::setNombreVotacion(const char* nombreVotacion)
-{
-	this->nombreVotacion = new char [strlen(nombreVotacion)+1];
-	strcpy(this->nombreVotacion, nombreVotacion);
-}
 void VotacionAlter::anadirvAlternativo(vAlternativo *alternativo)
 {
 	int nuevo_Va = this->numVotantes + 1;
@@ -148,210 +115,98 @@ void VotacionAlter::vaciador(int cantidadOpciones, int *resultados)
 
 int VotacionAlter::terminarVot()
 {
-//	int SegundaInstantanea(vAlternativo *va[], int cantidadDeVotos, int cantidadOpciones){
-		int resultados[this->nParticipantes];
 
-		int eliminados[this->nParticipantes];
-		vaciador(this->nParticipantes, eliminados);
-		cout <<"votos"<<this->numVotantes << endl;
-		cout <<"opciones"<<this->nParticipantes << endl;
-		cout <<"--"<<eliminados[2] << endl;
+	int resultados[this->nParticipantes];
+
+	int eliminados[this->nParticipantes];
+	vaciador(this->nParticipantes, eliminados);
 
 
-		//array temporal
-		int resultadosTemp[this->nParticipantes];
 
-		//array con todos los votos
-		vAlternativo * votos[this->numVotantes];
-		for (int i = 0; i < this->numVotantes; ++i) {
-			votos[i] = this->alternativos[i];
 
-			cout <<"holaaa?????" << this->alternativos[i]->getIdOpciones()[0] <<endl;
+	int resultadosTemp[this->nParticipantes];
+
+
+	vAlternativo * votos[this->numVotantes];
+	for (int i = 0; i < this->numVotantes; ++i) {
+		votos[i] = this->alternativos[i];
+	}
+
+
+	int votosNecesarios;
+
+	votosNecesarios = ((this->numVotantes/2) + 1)	;
+
+	int numVotTemp;
+	int numResTemp;
+	int Elimin;
+	int SWeliminado;
+	int ganador;
+	int paso = 0;
+	int hayGanador = 0;
+	int noResultado = 0;
+	int contador = 0;
+
+	while(hayGanador == 0 && noResultado == 0 && contador < this->nParticipantes ){
+		contador = contador + 1;
+		vaciador(this->nParticipantes, resultados);
+		for (int i = 0;   i < this->numVotantes; ++i) {
+			numVotTemp = votos[i]->getIdOpciones()[0];
+			numResTemp = resultados[numVotTemp - 1];
+			numResTemp = numResTemp + 1;
+			resultados[numVotTemp - 1] = numResTemp;
 		}
 
-
-		int votosNecesarios;
-
-		votosNecesarios = ((this->numVotantes/2) + 1)	; //<---------------------------------------[][][][]
-			fflush(stdout);
-			printf("Votosnecesarios = %i\n", votosNecesarios);
-
-		int numVotTemp;
-		int numResTemp;
-		int Elimin;
-		int SWeliminado;
-		int ganador;
-		int paso = 0;
-		int hayGanador = 0;
-		int noResultado = 0;
-		int contador = 0;
-
-		while(hayGanador == 0 && noResultado == 0 && contador < this->nParticipantes ){
-			contador = contador + 1;
-	//		cout << contador<< "VS"<<this->nParticipantes<<endl;
-	//		cout << "000000000000000000000000000000000000000000000000000000000000000000000000000" <<endl;
-
-			//meto cuanto votos tiene cada partido
-			vaciador(this->nParticipantes, resultados);
-			//		printf("cantidad de votos ANTES = %i\n ", this->num_VA);
-			//		fflush(stdout);
-			//		printf("1-%i\n",votos[0].idOpciones[0]);
-			//		fflush(stdout);
-			//		printf("2-%i\n",votos[1].idOpciones[0]);
-			//		fflush(stdout);
-			//		printf("3-%i\n",votos[2].idOpciones[0]);
-			//		fflush(stdout);
-			//		printf("4-%i\n",votos[3].idOpciones[0]);
-			//		fflush(stdout);
-			//		printf("5-%i\n",votos[4].idOpciones[0]);
-			//		fflush(stdout);
-
-	//		cout << votos[0]->getIdOpciones()[0] <<endl;
-	//		cout << votos[1]->getIdOpciones()[0] <<endl;
-	//		cout << votos[2]->getIdOpciones()[0] <<endl;
-	//		cout << votos[3]->getIdOpciones()[0] <<endl;
-	//		cout<<"1 For"<< endl;
-			for (int i = 0;   i < this->numVotantes; ++i) {
-	//			fflush(stdout);
-	//			printf("\n entro 333333333333333333333333333333333    POR %i\n", i);
-
-																												//printf("el votante numero %i vota a opcion numero %i\n",i , votos[i].idOpciones[0]);
-	//			cout << "\n el votante numero "<< i<<" vota a opcion numero " << votos[i]->getIdOpciones()[0] << ":" << endl;
-	//			fflush(stdout);
-				//guardo los votos del votante i en los resultados temporales
-																												//resultadosTemp = votos[i].idOpciones;
-				//Guardo en numVotTemp que partido ha puesto en el la opcíon en la que esté mirando
-				numVotTemp = votos[i]->getIdOpciones()[0];
-				//Saco la cantidad de votos que tiene la opcion selecionada por el votante
-				numResTemp = resultados[numVotTemp - 1];
-				//Le sumo 1 a la opción del votante
-																												//printf("antes de sumar %i\n", numResTemp);
-																												//fflush(stdout);
-				numResTemp = numResTemp + 1;
-				//printf("para opcion %i + 1 = %i\n", numVotTemp, numResTemp);
-				//fflush(stdout);
-				//Guardo el nuevo numero en la lista de resultado
-				resultados[numVotTemp - 1] = numResTemp;
-	//			cout <<numResTemp<<endl;
-	//			cout <<"terminooooooooooooooooo"<<endl;
+		for (int j = 0; j < this->nParticipantes; ++j) {
+			numVotTemp = resultados[j];
+			if (numVotTemp >= votosNecesarios){
+				ganador = j;
+				hayGanador = 1;
+				this->votAbiero = false;
+				return ganador + 1;
 			}
+		}
 
-			for (int x = 0; x < this->nParticipantes; ++x) {
-	//			cout <<"Partido "<< x <<":"<<resultados[x] << endl ;
-			}
+		if (hayGanador == 0) {
+			numVotTemp = resultados[0];
+			Elimin = 0;
 
-			cout<<"2 For"<< endl;
-			for (int j = 0; j < this->nParticipantes; ++j) {
+			for (int k = 1; k < this->nParticipantes; ++k) {
 
-	//			cout <<"4444444444444444444444444444444"<<endl;
-	//			cout <<"P"<< j <<":"<<resultados[j] << endl ;
-	//			fflush(stdout);
-				numVotTemp = resultados[j];
-	//			cout <<numVotTemp<<">="<< votosNecesarios <<endl<< endl;
-				if (numVotTemp >= votosNecesarios){
-					ganador = j;
-					hayGanador = 1;
-	//				printf("HAY GANADOR Y ES %i \n ",ganador);
-					this->votAbiero = false;
-					return ganador + 1;
+				if(eliminados[k] == 1 ){
 
+				}else{
+					if (numVotTemp > resultados[k] || eliminados[Elimin] ==1){
 
-				}
-			}
-			if (hayGanador == 0) {
-	//			printf("\n\n entro 5555555555555555555555555555555555555 \n");
-				//			fflush(stdout);
-				numVotTemp = resultados[0];
-				Elimin = 0;
-
-	//			cout<< "eliminadosv" << contador<<": " <<eliminados[0] <<eliminados[1] <<eliminados[2] <<eliminados[3] <<endl;
-	//			cout<< "vualta" << contador<<": " <<resultados[0] <<resultados[1] <<resultados[2] <<resultados[3] <<endl;
-				for (int k = 1; k < this->nParticipantes; ++k) {
-
-	//
-	//				cout<< k <<endl;
-	//				cout<< (votos[k]->getIdOpciones()[0])<<"***************************************************"<<endl;
-	//				cout<< (eliminados[votos[k]->getIdOpciones()[0]- 1])<<"***************************************************"<<endl;
-	//				cout<<numVotTemp<< ">" << k << ":" << resultados[k] <<endl<< " && "<< eliminados[(votos[k]->getIdOpciones()[0]) - 1] <<endl<<endl;
-	//				while(eliminados[Elimin] == 1){
-	//					Elimin = Elimin + 1;
-	//					numVotTemp = resultados[Elimin];
-	//					cout <<"EL NUCE=" << Elimin <<endl;
-	//				}
-					 if(eliminados[k] == 1 ){
-
-	//					 cout <<k<<"YA ESTA ELIMINADO"<<endl;
-					 }else{
-	//					 cout <<k<<"*NO* ESTA ELIMINADO"<<endl;
-						 if (numVotTemp > resultados[k] || eliminados[Elimin] ==1){
-
-							 //cout << "numVotTemp" << Elimin << "(" << numVotTemp << ") >" << "resultados" << k << "(" << resultados[k] << ")" <<endl <<endl;
-							 //					printf("numVotTemp%i(%i) > resultados%i(%i)\n",Elimin, numVotTemp,k,resultados[k]);
-							 fflush(stdout);
-	//						 cout << "numVotTemp ANTES:"<<numVotTemp<<endl;
-							 numVotTemp = resultados[k];
-	//						 cout << "numVotTemp DESP:"<<numVotTemp<<endl<<endl;
-	//						 cout << "Elimin ANTES:"<<Elimin<<endl;
-							 Elimin = k;
-	//						 cout << " DESP:"<<Elimin<<endl<<endl;
-	//						 cout<<"*////////////////////////////////////////////////////////////////////////////////////////////////////////"<<endl;
-
-							 //					printf("elim = %i",Elimin);
-							 //					fflush(stdout);
-						 }
-
-					 }
-
-
-
-				}
-
-				//1 significa eliminado
-	//			cout<<"Se elimina opción:"<< Elimin << endl;
-				eliminados[Elimin] = 1;
-
-	//			cout<<"3 For"<< endl;
-
-				for (int q = 0;  q < this->numVotantes; ++ q) {
-	//				cout<<"primera opcion votante"<< q <<":"<< (votos[q]->getIdOpciones()[0]) << endl<< endl;
-				}
-	//			cout<<"POSICIOOOOON"<< endl;
-				for (int q = 0;  q < this->numVotantes; ++ q) {
-
-	//				cout<<"posicion"<< q <<":"<< eliminados[q] << endl;
-				}
-
-
-
-				for (int l = 0; l < this->numVotantes; ++l) {
-					//while(Eliminado == 0){
-	//				cout<<"IIIIIIIIIIIIIIIIINNN3 For"<< endl;
-					SWeliminado = 1;
-					while  (SWeliminado == 1){
-	//					cout<< endl <<"MIRANDO DENTROOOOOOOOOO:" << endl;
-	//					cout<<"MIRANDO POSICION:"<< (votos[l]->getIdOpciones()[0] - 1) << endl;
-	//					cout<<"DENTRO:"<< (eliminados[(votos[l]->getIdOpciones()[0]) - 1])<< endl;
-
-						if (eliminados[(votos[l]->getIdOpciones()[0]) - 1] == 1) {
-							SWeliminado = 1;
-							// mover 1
-							for (int n = 1; n < this->nParticipantes; ++n) {
-	//							printf("\n entro666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666\n");
-								//							fflush(stdout);
-								//							printf("%i <-- %i\n",votos[l].idOpciones[n - 1], votos[l].idOpciones[n]);
-								//							fflush(stdout);
-								votos[l]->getIdOpciones()[n - 1] = votos[l]->getIdOpciones()[n];
-							}
-						}else{
-							SWeliminado = 0;
-						}
-						//					getchar();
+						numVotTemp = resultados[k];
+						Elimin = k;
 					}
 				}
 			}
+
+			eliminados[Elimin] = 1;
+
+			for (int l = 0; l < this->numVotantes; ++l) {
+				SWeliminado = 1;
+				while  (SWeliminado == 1){
+
+					if (eliminados[(votos[l]->getIdOpciones()[0]) - 1] == 1) {
+						SWeliminado = 1;
+						// mover 1
+						for (int n = 1; n < this->nParticipantes; ++n) {
+							fflush(stdout);
+							votos[l]->getIdOpciones()[n - 1] = votos[l]->getIdOpciones()[n];
+						}
+					}else{
+						SWeliminado = 0;
+					}
+
+				}
+			}
 		}
-	//	cout <<"EMPAAAAAAAAATE"<<endl;
-		this->votAbiero = false;
-		return -1;
+	}
+
+	this->votAbiero = false;
+	return -1;
 
 }

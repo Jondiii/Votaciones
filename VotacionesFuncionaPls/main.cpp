@@ -60,7 +60,7 @@ void creaBD()
 	char *error;
 	if (sqlite3_open("votaciones.sql", &db))
 		{
-			cout << "Ha habido un problema al crear la BD" << endl; return;
+			cout << "Ha habido un problema al crear la BD." << endl; return;
 		}
 	else
 	{//callback: https://stackoverflow.com/questions/31146713/sqlite3-exec-callback-function-clarification/31168999
@@ -215,9 +215,9 @@ void recuento()
     }
      token = candidatos.substr(0, pos);
      nombres[i] = token;
-     cout << nombres[i] << endl;
+
      int metodo;
-     cout<< "Qué método de votación quieres usar:\n1.FPP\n2.Segunda Instantanea" << endl;
+     cout<< "Elije qué método de votación quieres usar:\n1.FPP\n2.Segunda Instantanea" << endl;
      cin >> metodo;
      if(metodo == 1){
 		 int o = 0;
@@ -233,26 +233,30 @@ void recuento()
 			 o++;
 		 }
 
-		Votacion* ganador = new Votacion();
-		ganador->setId(nVotaciones);
-		ganador->setFecha_inicio(0);
-		ganador->setFecha_fin(0);
-		ganador->setTipoVotacion("N");
-		ganador->setNombreVotacion("Recuento Manual");
-		ganador->setNParticipantes(numCand);
-		ganador->setParticipantes(listaOpcion);
+		Votacion* vot = new Votacion();
+		vot->setId(nVotaciones);
+		vot->setFecha_inicio(0);
+		vot->setFecha_fin(0);
+		vot->setTipoVotacion("N");
+		vot->setNombreVotacion("Recuento Manual");
+		vot->setNParticipantes(numCand);
+		vot->setParticipantes(listaOpcion);
 
-		ganador->terminarVot();
+		int idGanador = vot->terminarVot();
 
-		for (int i = 0; i < ganador->getnParticipantes(); ++i)
+		for (int i = 0; i < vot->getnParticipantes(); ++i)
 		{
-			ganador->getOpcion(i)->imprimirOpcion();
+			vot->getOpcion(i)->imprimirOpcion();
 		}
 
-		cout << "El ganador es: " << ganador->getGanador() << "\n" << endl;
+		if(idGanador == 0)
+		{
+			cout << "Ha habido un empate." << endl;
+		} else
+		{
+			cout << "El ganador es: " << vot->getGanador() << ".\n" << endl;
+		}
 
-		delete[] nombres;
-		delete[] listaOpcion;
     }
      if (metodo == 2)
      {
@@ -267,15 +271,13 @@ void recuento()
 		 for(int i = 0; i < numPers; i++)
 		 {
 			 ord = 0;
-			 cout << "Persona nº"<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas, usando sus IDs." << endl;
+			 cout << "Persona nº "<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas y un espacio, usando sus IDs." << endl;
 			 for (int o = 0; o < numCand; o++){
-				 cout << nombres[o] << " tiene el ID " << o + 1 << endl;
+				 cout << nombres[o] << " tiene el ID " << o + 1 << "." << endl;
 			 }
-			// cout << "Hola??"<< endl;
 			 fflush(stdin);
 			 getline (cin, orden);
-		//	 fflush(stdout);
-			// orden = "3, 2, 1, 4";
+
 			 pos = 0;
 			 while ((pos = orden.find(delimiter)) != string::npos)
 			 {
@@ -284,7 +286,6 @@ void recuento()
 				 x = 0;
 				 geek >> x;
 				 listaOrden[ord] = x;
-			   //  cout << listaOrden[i] << endl;
 				 orden.erase(0, pos + delimiter.length());
 				 ord++;
 				 }
@@ -306,16 +307,21 @@ void recuento()
 		 votAlt->setNumVotantes(numPers);
 		 votAlt->setAlternativos(listaVotos);
 
-	//    	 for (i = 0; i < numPers ; i++ )
-	//    	 {
-	//    		 listaVotos[i].imprimirValternativo(numCand);
-	//    	 }
+		int idGanador = votAlt->terminarVot();
 
-		 int ganante = votAlt->terminarVot();
-		 cout << "Ha ganado: " << nombres[ganante - 1 ] << ", con ID: " << ganante << endl;
-		 votAlt->setGanador(nombres[ganante - 1].c_str());
+
+		if(idGanador == -1)
+		{
+			cout << "Ha habido un empate." << endl;
+		} else
+		{
+			cout << "Ha ganado: " << nombres[idGanador - 1 ] << ", con ID: " << idGanador << "." << endl;
+			votAlt->setGanador(nombres[idGanador - 1].c_str());
+		}
+
+
      } if (metodo != 1 && metodo != 2) {
-    	 cout <<"No se ha dado un método valido" << endl;
+    	 cout <<"No se ha dado un método valido." << endl;
      }
 }
 
@@ -378,24 +384,32 @@ int convierteFecha(string fecha){
 
 void historial()
 {
-    cout << "¿Que quieres hacer? \n" << endl;
+    cout << "¿Qué quieres hacer? \n" << endl;
 
-    cout << "1. Cerrar Votacion"  << endl;
-    cout << "2. Consultar Votacion" << endl;
+    cout << "1. Cerrar Votación"  << endl;
+    cout << "2. Consultar Votación" << endl;
     int numero;
     cin>> numero;
 	if(!comprobarNumero(numero, 2)) return;
+	int idGanador;
+	 ostringstream cerrarVot;
     switch (numero) {
     case 1:
-        for (int i = 0; i < nVotaciones; i++){
+        for (int i = 0; i < nVotaciones; i++)
+        {
             cout << i + 1 <<". ";
             listadoVotaciones[i]->imprimirVotacion();
         }
-        cout << "¿Que votacion desea cerrar? \n" << endl;
+        cout << "¿Qué votacion deseas cerrar? \n" << endl;
         cin >> numero;
         numero -=1;
-        int idGanador = listadoVotaciones[numero]->terminarVot();
-        cout << listadoVotaciones[numero]->getGanador() << endl;
+        idGanador = listadoVotaciones[numero]->terminarVot();
+        listadoVotaciones[numero]->setGanador(listadoVotaciones[numero]->getOpcion(idGanador)->getNombre());
+        cout << "Ha ganado: " << listadoVotaciones[numero]->getGanador() << "." << endl;
+
+        cerrarVot << "UPDATE votacion SET VOT_ABIERTA = 0 WHERE ID_V = " << numero << ";";
+        sqlite3_exec(db, cerrarVot.str().c_str(), NULL, 0, NULL);
+
         break;
 
 
@@ -404,7 +418,7 @@ void historial()
             cout << i + 1 <<". ";
             listadoVotaciones[i]->imprimirVotacion();
         }
-        cout << "¿Que votacion desea ver? \n" << endl;
+        cout << "¿Qué votación deseas ver? \n" << endl;
         cin >> numero;
         numero -=1;
         cout << "CANDIDATOS:" << endl;
@@ -413,12 +427,17 @@ void historial()
             cout << i + 1 <<". ";
             listadoVotaciones[numero]->getOpcion(i)->imprimirOpcion();
         }
+
+  	  int fin;
+  	  cout << "Escribe algo y pulsa intro cuando hayas acabado de consultar las votaciones." << endl;
+  	  cin >> fin;
+  	  cout << "\n";
+
         break;
-
     default:
-        cout <<"Introduzca una opción dentro del rango"<< endl;
-
+        cout <<"Introduce una opción dentro del rango."<< endl;
     }
+
 }
 
 void creaVotacion(Votacion *v)
@@ -450,7 +469,7 @@ void creaVotacion(Votacion *v)
 				case 1:
 					cout << "Introduce el nombre: ";
 					cin >> name;
-					cout << "\nNombre: " << name << endl;
+					cout << "\nNombre: " << name << "." << endl;
 					strtok(name, "\n");
 					v->setNombreVotacion(name);
 					bNombre = true;
@@ -561,7 +580,7 @@ void guardarEnBD()
 	{
 		ostringstream updateGanador;
 		updateGanador << "UPDATE votacion SET GANADOR = '" << listadoVotaciones[i]->getGanador();
-		updateGanador << "' WHERE ID = " << listadoVotaciones[i]->getId() << ";";
+		updateGanador << "' WHERE ID_V = " << listadoVotaciones[i]->getId() << ";";
 		sqlite3_exec(db, updateGanador.str().c_str(), NULL, 0, NULL);
 	}
 }
@@ -583,7 +602,7 @@ void votar()
     cin >> cod;
     p1.setCodigo(cod);
 
-    cout << "Elegir votación: (Introduce el numero de la votacion en la que desee participar)" << endl;
+    cout << "Elegir votación: (Introduce el numero de la votación en la que desee participar)" << endl;
 
     for (int i = 0; i< nVotaciones;i++)
     {
@@ -596,7 +615,7 @@ void votar()
     votacion_elegida -= 1;
     if (!Persona::comprobarDni(p1.getDni(), listadoVotaciones[votacion_elegida]->getId()))
     {
-        cout << "Ya has votado en esta VOTACION."<<endl;
+        cout << "Ya has votado en esta votación."<<endl;
         return;
     }
 
@@ -672,17 +691,16 @@ int main()
 
 	if( rc )
 	{
-	cout << "Error al abrir la Base de Datos\n" << endl;
+	cout << "Error al abrir la Base de Datos.\n" << endl;
 	return(0);
 	} else {
-	cout << "Base de datos abierta correctamente\n" << endl;
+	cout << "Base de datos abierta correctamente.\n" << endl;
 	}
 
 	//Cuenta cuántas votaciones hay en la BD.
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", cuentaVotacionesBD, 0, NULL);
 	listadoVotaciones = new Votacion*[nVotaciones];
 
-	cout << "nVotaciones: " << nVotaciones << endl;
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
 
 	contador = 0; 	//Lo ponemos a 0 porque anteriormente se ha estado usando para meter las votaciones en la
@@ -701,7 +719,6 @@ int main()
 		contador++;
 		nCandidatos = 0;
 	}
-	cout << "candidatosTotales: " << candidatosTotales << endl;
 
 	creaBD();
 	menu();
