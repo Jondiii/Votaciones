@@ -439,39 +439,114 @@ void recuento() {
      token = candidatos.substr(0, pos);
      nombres[i] = token;
      cout << nombres[i] << endl;
+     int metodo;
+     cout<< "Qué método de votación quieres usar:\n1.FPP\n2.Segunda Instantanea" << endl;
+     cin >> metodo;
+     if(metodo == 1){
+		 int o = 0;
+		 Opcion **listaOpcion = new Opcion*[numCand];
+		 while (o < numCand){
+			 cout << "¿Cuántos votos ha obtenido " << nombres[o] << "?" << endl;
+			 int voto = 0;
+			 cin >> voto;
 
-     int o = 0;
-     Opcion *listaOpcion = new Opcion[numCand];
-     while (o < numCand){
-         cout << "¿Cuántos votos ha obtenido " << nombres[o] << "?" << endl;
-         int voto = 0;
-         cin >> voto;
-         int n = nombres[o].length();
-         char charNombres[n + 1];
-         strcpy(charNombres, nombres[o].c_str());
-         Opcion option(o + 1, voto, charNombres);
-         listaOpcion[o] = option;
-         //option.imprimirOpcion();
-          o++;
+			 Opcion* option = new Opcion(o + 1, voto, nombres[o].c_str());
+			 listaOpcion[o] = option;
+			 option->imprimirOpcion();
+			 o++;
+		 }
+
+		Votacion* ganador = new Votacion();
+		ganador->setId(nVotaciones);
+		ganador->setFecha_inicio(0);
+		ganador->setFecha_fin(0);
+		ganador->setTipoVotacion("N");
+		ganador->setNombreVotacion("Recuento Manual");
+		ganador->setNParticipantes(numCand);
+		ganador->setParticipantes(listaOpcion);
+
+		ganador->terminarVot();
+
+		for (int i = 0; i < ganador->getnParticipantes(); ++i)
+		{
+			ganador->getOpcion(i)->imprimirOpcion();
+		}
+
+		cout << "El ganador es: " << ganador->getGanador() << "\n" << endl;
+
+		delete[] nombres;
+		delete[] listaOpcion;
+    }
+     if (metodo == 2){
+    	 string orden;
+    	 vAlternativo* listaVotos = new vAlternativo[numCand];
+    	 int x = 0;
+    	 int* listaOrden = new int[numCand];
+    	 int numPers;
+    	 int ord;
+    	 cout << "¿Cuántas personas votarán?" << endl;
+    	 cin >> numPers;
+    	 for(int i = 0; i < numPers; i++){
+    		 ord = 0;
+    		 cout << "Persona nº"<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas, usando sus IDs." << endl;
+    		 for (int o = 0; o < numCand; o++){
+    			 cout << nombres[o] << " tiene el ID " << o + 1 << endl;
+    		 }
+    		// cout << "Hola??"<< endl;
+    		 fflush(stdin);
+    		 getline (cin, orden);
+    	//	 fflush(stdout);
+    		// orden = "3, 2, 1, 4";
+    		 pos = 0;
+    		 while ((pos = orden.find(delimiter)) != string::npos)
+    		 {
+				 token = orden.substr(0, pos);
+				 stringstream geek(token);
+				 x = 0;
+				 geek >> x;
+				 listaOrden[ord] = x;
+			   //  cout << listaOrden[i] << endl;
+				 orden.erase(0, pos + delimiter.length());
+				 ord++;
+    		     }
+    		 stringstream geek(orden);
+    		 geek >> x;
+    		 listaOrden[ord] = x;
+
+    		 vAlternativo voto = vAlternativo(listaOrden, 0, numCand);
+    		 listaVotos[i] = voto;
+
+    	 }
+    	 for (i = 0; i < numPers ; i++ ){
+    		 listaVotos[i].imprimirValternativo(numCand);
+    	 }
+    	 Opcion* listaOp = new Opcion[numCand];
+    	 VotacionAlter votAlt;
+    	 votAlt.setId(nVotaciones + 1);
+    	 votAlt.setFecha_inicio(0);
+    	 votAlt.setFecha_fin(0);
+    	 votAlt.setTipoVotacion("A");
+    	 votAlt.setNombreVotacion("Recuento Manual");
+    	 votAlt.setNParticipantes(numCand);
+    	 votAlt.setParticipantes(&listaOp);
+    	 votAlt.setNum_VA(numPers);
+    	 votAlt.setAlternativos(&listaVotos);
+
+    	 for (i = 0; i < numPers ; i++ ){
+    	     		 listaVotos[i].imprimirValternativo(numCand);
+    	     	 }
+
+//    	 for(i = 0; i < numPers; i++){
+//    		 votAlt.getAlternativo(i)->imprimirValternativo(numCand);
+//    	 }
+    	// int ganante = votAlt.terminarVot();
+    	// cout << "Ha ganado: " << nombres[ganante - 1 ] << ", con ID: " << ganante - 1 << endl;
+    	 delete[] listaOp;
+
+
+     } if (metodo != 1 && metodo != 2) {
+    	 cout <<"No se ha dado un método valido" << endl;
      }
-
-     o = 0;
-     int votos_totales = 0;
-
-     while (o < numCand){
-         votos_totales += listaOpcion[o].getVotos();
-         o++;
-     }
-    int ganador = firstPassThePost2(listaOpcion, numCand);
-    if (ganador == 0){
-            cout << "Ha habido un empate" << endl;
-        }
-        else{
-            cout << listaOpcion[ganador - 1].getNombre() << " es el ganador con el id: " << listaOpcion[ganador - 1].getId() << endl;
-        }
-
-    delete[] nombres;
-    delete[] listaOpcion;
 }
 
 bool comprobarFecha(/*char*/ string stringf)
@@ -543,7 +618,7 @@ void historial()
     cout << "2. Consultar Votacion" << endl;
     int numero;
     cin>> numero;
-
+	if(!comprobarNumero(numero, 2)) return;
     switch (numero) {
     case 1:
         for (int i = 0; i < nVotaciones; i++){
@@ -598,7 +673,11 @@ void creaVotacion(Votacion *v)
 				cout << "1. Nombre\n2. Candidatos\n3. Periodo\n4. Aceptar\n" << endl;
 				int key2;
 				cin >> key2;
-				if(!comprobarNumero(key2, 5)) break;
+				if(!comprobarNumero(key2, 5))
+					{
+						cout << "\n";
+						break;
+					}
 				switch(key2)
 				{
 				case 1:
@@ -662,7 +741,6 @@ void creaVotacion(Votacion *v)
 					} else
 					{
 						cout << "Alguna fecha no ha sido introducida correctamente." << endl;
-						bPeriodo = false;
 					}
 
 					break;
@@ -830,7 +908,7 @@ void menu()
 	bool finPrograma = false;
 	while(!finPrograma)
 		{
-			cout << "1. Crear Votación\n2. Votar\n3. Recuento\n4. Historial\n5. Acabar y guardar" << endl;
+			cout << "1. Crear Votación\n2. Votar\n3. Recuento\n4. Historial/Cerrar Votación\n5. Acabar y guardar" << endl;
 			int key = 0;
 			cin >> key;
 			if(!comprobarNumero(key, 5)) return;

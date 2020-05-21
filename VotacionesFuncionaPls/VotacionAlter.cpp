@@ -51,6 +51,52 @@ vAlternativo* VotacionAlter::getAlternativo(int i)
 {
 	return this->alternativos[i];
 }
+void VotacionAlter::setNParticipantes(int numero)
+{
+	this->nParticipantes = numero;
+}
+void VotacionAlter::setParticipantes(Opcion* opciones[])
+{
+	this->participantes = new Opcion*[this->nParticipantes];
+	for (int i = 0;  i <this->nParticipantes; i ++)
+	{
+		this->participantes[i] = opciones[i];
+	}
+}
+void VotacionAlter::setAlternativos(vAlternativo* alternativo[])
+{
+	this->alternativos = new vAlternativo*[this->nParticipantes];
+	for (int i = 0;  i < this->nParticipantes; i ++)
+	{
+		this->alternativos[i] = alternativo[i];
+	}
+}
+void VotacionAlter::setNum_VA(int numero){
+	this-> num_VA = numero;
+}
+void VotacionAlter::setId(int id)
+{
+	this->id = id;
+}
+void VotacionAlter::setFecha_fin(int fecha_fin)
+{
+	this->fecha_fin = fecha_fin;
+}
+void VotacionAlter::setFecha_inicio(int fecha_inicio)
+{
+	this->fecha_inicio = fecha_inicio;
+}
+void VotacionAlter::setTipoVotacion(const char* tipoVotacion)
+{
+	this->tipoVotacion = new char [strlen(tipoVotacion)+1];
+	strcpy(this->tipoVotacion, tipoVotacion);
+}
+
+void VotacionAlter::setNombreVotacion(const char* nombreVotacion)
+{
+	this->nombreVotacion = new char [strlen(nombreVotacion)+1];
+	strcpy(this->nombreVotacion, nombreVotacion);
+}
 void VotacionAlter::anadirvAlternativo(vAlternativo *alternativo)
 {
 	int nuevo_Va = this->num_VA + 1;

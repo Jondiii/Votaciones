@@ -17,6 +17,7 @@ Votacion::Votacion()
 	this->ganador = "NADIE";
 	this->nombreVotacion = 0;
 	this->tipoVotacion = 0;
+	this->votAbiero = true;
 
 }
 Votacion::Votacion(int id, int fecha_inicio, int fecha_fin, const char* tipoVotacion, const char* ganador, const char* nombreVotacion, int nParticipantes, Opcion * participantes[])
@@ -174,7 +175,7 @@ int Votacion::terminarVot(){
     int empate = 0;
 
     for (int i = 1;  i < this->nParticipantes ; ++ i) {
-        Opcion * opcionCar = this->participantes[0];
+        Opcion * opcionCar = this->participantes[i];
         if (opcionGuar->getVotos() < opcionCar->getVotos()) {
             cantGuar = opcionCar->getVotos();
             opcionGuar = opcionCar;
