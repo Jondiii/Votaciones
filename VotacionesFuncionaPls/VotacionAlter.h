@@ -14,7 +14,7 @@
 
 class VotacionAlter: public Votacion
 {
-	int num_VA;
+	int numVotantes;
 	vAlternativo **alternativos;
 	void vaciador(int cantidadOpciones, int *resultados);
 public:
@@ -23,7 +23,7 @@ public:
 	VotacionAlter();
 	virtual ~VotacionAlter();
 
-	int getNum_VA();
+	int getNumVotantes();
 	vAlternativo* getAlternativo(int i);
 	void anadirvAlternativo(vAlternativo *alternativo);
 
@@ -35,7 +35,7 @@ public:
 	void setParticipantes(Opcion* opciones[]);
 	void setTipoVotacion(const char* tipoVotacion);
 	void setOpcion(Opcion op, int num);
-	void setNum_VA(int votantes);
+	void setNumVotantes(int votantes);
 	void setAlternativos(vAlternativo* alternativo[]);
 
 	virtual int terminarVot();

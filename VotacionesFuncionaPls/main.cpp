@@ -34,239 +34,6 @@ int contador = 0;
 
 Votacion** listadoVotaciones;
 
-//void vaciador(int cantidadOpciones, int *resultados){
-//    for (int x = 0; x < cantidadOpciones; ++x) {
-//        resultados[x] = 0;
-//    }
-//}
-//
-//int SegundaInstantanea(vAlternativo *va[], int cantidadDeVotos, int cantidadOpciones){
-//	int resultados[cantidadOpciones];
-//
-//	int eliminados[cantidadOpciones];
-//	vaciador(cantidadOpciones, eliminados);
-//	cout <<"votos"<<cantidadDeVotos << endl;
-//	cout <<"opciones"<<cantidadOpciones << endl;
-//	cout <<"--"<<eliminados[2] << endl;
-//
-//
-//	//array temporal
-//	int resultadosTemp[cantidadOpciones];
-//
-//	//array con todos los votos
-//	vAlternativo *votos[cantidadDeVotos];
-//	for (int i = 0; i < cantidadDeVotos; ++i) {
-//		votos[i] = va[i];
-//
-//		cout <<"holaaa?????" << va[i]->getIdOpciones()[0] <<endl;
-//	}
-//
-//
-//	int votosNecesarios;
-//
-//	votosNecesarios = ((cantidadDeVotos/2) + 1)	; //<---------------------------------------[][][]][]
-//		fflush(stdout);
-//		printf("Votosnecesarios = %i\n", votosNecesarios);
-//
-//	int numVotTemp;
-//	int numResTemp;
-//	int Elimin;
-//	int SWeliminado;
-//	int ganador;
-//	int paso = 0;
-//	int hayGanador = 0;
-//	int noResultado = 0;
-//	int contador = 0;
-//
-//	while(hayGanador == 0 && noResultado == 0 && contador < cantidadOpciones ){
-//		contador = contador + 1;
-////		cout << contador<< "VS"<<cantidadOpciones<<endl;
-////		cout << "000000000000000000000000000000000000000000000000000000000000000000000000000" <<endl;
-//
-//		//meto cuanto votos tiene cada partido
-//		vaciador(cantidadOpciones, resultados);
-//		//		printf("cantidad de votos ANTES = %i\n ", cantidadDeVotos);
-//		//		fflush(stdout);
-//		//		printf("1-%i\n",votos[0].idOpciones[0]);
-//		//		fflush(stdout);
-//		//		printf("2-%i\n",votos[1].idOpciones[0]);
-//		//		fflush(stdout);
-//		//		printf("3-%i\n",votos[2].idOpciones[0]);
-//		//		fflush(stdout);
-//		//		printf("4-%i\n",votos[3].idOpciones[0]);
-//		//		fflush(stdout);
-//		//		printf("5-%i\n",votos[4].idOpciones[0]);
-//		//		fflush(stdout);
-//
-////		cout << votos[0]->getIdOpciones()[0] <<endl;
-////		cout << votos[1]->getIdOpciones()[0] <<endl;
-////		cout << votos[2]->getIdOpciones()[0] <<endl;
-////		cout << votos[3]->getIdOpciones()[0] <<endl;
-////		cout<<"1 For"<< endl;
-//		for (int i = 0;   i < cantidadDeVotos; ++i) {
-////			fflush(stdout);
-////			printf("\n entro 333333333333333333333333333333333    POR %i\n", i);
-//
-//																											//printf("el votante numero %i vota a opcion numero %i\n",i , votos[i].idOpciones[0]);
-////			cout << "\n el votante numero "<< i<<" vota a opcion numero " << votos[i]->getIdOpciones()[0] << ":" << endl;
-////			fflush(stdout);
-//			//guardo los votos del votante i en los resultados temporales
-//																											//resultadosTemp = votos[i].idOpciones;
-//			//Guardo en numVotTemp que partido ha puesto en el la opcíon en la que esté mirando
-//			numVotTemp = votos[i]->getIdOpciones()[0];
-//			//Saco la cantidad de votos que tiene la opcion selecionada por el votante
-//			numResTemp = resultados[numVotTemp - 1];
-//			//Le sumo 1 a la opción del votante
-//																											//printf("antes de sumar %i\n", numResTemp);
-//																											//fflush(stdout);
-//			numResTemp = numResTemp + 1;
-//			//printf("para opcion %i + 1 = %i\n", numVotTemp, numResTemp);
-//			//fflush(stdout);
-//			//Guardo el nuevo numero en la lista de resultado
-//			resultados[numVotTemp - 1] = numResTemp;
-////			cout <<numResTemp<<endl;
-////			cout <<"terminooooooooooooooooo"<<endl;
-//		}
-//
-//		for (int x = 0; x < cantidadOpciones; ++x) {
-////			cout <<"Partido "<< x <<":"<<resultados[x] << endl ;
-//		}
-//
-//		cout<<"2 For"<< endl;
-//		for (int j = 0; j < cantidadOpciones; ++j) {
-//
-////			cout <<"4444444444444444444444444444444"<<endl;
-////			cout <<"P"<< j <<":"<<resultados[j] << endl ;
-////			fflush(stdout);
-//			numVotTemp = resultados[j];
-////			cout <<numVotTemp<<">="<< votosNecesarios <<endl<< endl;
-//			if (numVotTemp >= votosNecesarios){
-//				ganador = j;
-//				hayGanador = 1;
-////				printf("HAY GANADOR Y ES %i \n ",ganador);
-//
-//				return ganador + 1;
-//
-//			}
-//		}
-//		if (hayGanador == 0) {
-////			printf("\n\n entro 5555555555555555555555555555555555555 \n");
-//			//			fflush(stdout);
-//			numVotTemp = resultados[0];
-//			Elimin = 0;
-//
-////			cout<< "eliminadosv" << contador<<": " <<eliminados[0] <<eliminados[1] <<eliminados[2] <<eliminados[3] <<endl;
-////			cout<< "vualta" << contador<<": " <<resultados[0] <<resultados[1] <<resultados[2] <<resultados[3] <<endl;
-//			for (int k = 1; k < cantidadOpciones; ++k) {
-//
-////
-////				cout<< k <<endl;
-////				cout<< (votos[k]->getIdOpciones()[0])<<"***************************************************"<<endl;
-////				cout<< (eliminados[votos[k]->getIdOpciones()[0]- 1])<<"***************************************************"<<endl;
-////				cout<<numVotTemp<< ">" << k << ":" << resultados[k] <<endl<< " && "<< eliminados[(votos[k]->getIdOpciones()[0]) - 1] <<endl<<endl;
-////				while(eliminados[Elimin] == 1){
-////					Elimin = Elimin + 1;
-////					numVotTemp = resultados[Elimin];
-////					cout <<"EL NUCE=" << Elimin <<endl;
-////				}
-//				 if(eliminados[k] == 1 ){
-//
-////					 cout <<k<<"YA ESTA ELIMINADO"<<endl;
-//				 }else{
-////					 cout <<k<<"*NO* ESTA ELIMINADO"<<endl;
-//					 if (numVotTemp > resultados[k] || eliminados[Elimin] ==1){
-//
-//						 //cout << "numVotTemp" << Elimin << "(" << numVotTemp << ") >" << "resultados" << k << "(" << resultados[k] << ")" <<endl <<endl;
-//						 //					printf("numVotTemp%i(%i) > resultados%i(%i)\n",Elimin, numVotTemp,k,resultados[k]);
-//						 fflush(stdout);
-////						 cout << "numVotTemp ANTES:"<<numVotTemp<<endl;
-//						 numVotTemp = resultados[k];
-////						 cout << "numVotTemp DESP:"<<numVotTemp<<endl<<endl;
-////						 cout << "Elimin ANTES:"<<Elimin<<endl;
-//						 Elimin = k;
-////						 cout << " DESP:"<<Elimin<<endl<<endl;
-////						 cout<<"*////////////////////////////////////////////////////////////////////////////////////////////////////////"<<endl;
-//
-//						 //					printf("elim = %i",Elimin);
-//						 //					fflush(stdout);
-//					 }
-//
-//				 }
-//
-//
-//
-//			}
-//
-//			//1 significa eliminado
-////			cout<<"Se elimina opción:"<< Elimin << endl;
-//			eliminados[Elimin] = 1;
-//
-////			cout<<"3 For"<< endl;
-//
-//			for (int q = 0;  q < cantidadDeVotos; ++ q) {
-////				cout<<"primera opcion votante"<< q <<":"<< (votos[q]->getIdOpciones()[0]) << endl<< endl;
-//			}
-////			cout<<"POSICIOOOOON"<< endl;
-//			for (int q = 0;  q < cantidadDeVotos; ++ q) {
-//
-////				cout<<"posicion"<< q <<":"<< eliminados[q] << endl;
-//			}
-//
-//
-//
-//			for (int l = 0; l < cantidadDeVotos; ++l) {
-//				//while(Eliminado == 0){
-////				cout<<"IIIIIIIIIIIIIIIIINNN3 For"<< endl;
-//				SWeliminado = 1;
-//				while  (SWeliminado == 1){
-////					cout<< endl <<"MIRANDO DENTROOOOOOOOOO:" << endl;
-////					cout<<"MIRANDO POSICION:"<< (votos[l]->getIdOpciones()[0] - 1) << endl;
-////					cout<<"DENTRO:"<< (eliminados[(votos[l]->getIdOpciones()[0]) - 1])<< endl;
-//
-//					if (eliminados[(votos[l]->getIdOpciones()[0]) - 1] == 1) {
-//						SWeliminado = 1;
-//						// mover 1
-//						for (int n = 1; n < cantidadOpciones; ++n) {
-////							printf("\n entro666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666\n");
-//							//							fflush(stdout);
-//							//							printf("%i <-- %i\n",votos[l].idOpciones[n - 1], votos[l].idOpciones[n]);
-//							//							fflush(stdout);
-//							votos[l]->getIdOpciones()[n - 1] = votos[l]->getIdOpciones()[n];
-//						}
-//					}else{
-//						SWeliminado = 0;
-//					}
-//					//					getchar();
-//				}
-//			}
-//		}
-//	}
-////	cout <<"EMPAAAAAAAAATE"<<endl;
-//	return -1;
-//}
-//
-int firstPassThePost2(Opcion Opciones[], int cantidadOpciones){
-    Opcion opcionGuar = Opciones[0];
-    int cantGuar; //= punteroOpciones->getVotos();
-    int empate = 0;
-
-    for (int i = 1;  i < cantidadOpciones ; ++ i) {
-        Opcion opcionCar = Opciones[i];
-        if (opcionGuar.getVotos() < opcionCar.getVotos()) {
-            cantGuar = opcionCar.getVotos();
-            opcionGuar = opcionCar;
-            empate = 0;
-        }else if(cantGuar == opcionCar.getVotos()){
-            empate = 1;
-        }
-    }
-    if (empate == 1) {
-        return 0;
-    }
-
-    return opcionGuar.getId();
-}
-
 void anyadirVotacion(Votacion *vot)
 {
     nVotaciones ++;
@@ -341,18 +108,27 @@ void creaBD()
 	}
 }
 
+/*
+ * Cuenta el número de votaciones que hay en la BD.
+ */
 static int cuentaVotacionesBD(void *unused, int nCols, char **data, char **colName)
 {
 	nVotaciones++;
 	return 0;
 }
 
+/*
+ * Cuenta los candidatos de una única votación.
+ */
 static int cuentaCandidatosBD(void *unused, int nCols, char **data, char **colName)
 {
 	nCandidatos++;
 	return 0;
 }
 
+/*
+ * Se añaden a la votación correspondiente los candidatos.
+ */
 static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colName)
 {
 	Opcion* op = new Opcion();
@@ -376,7 +152,7 @@ static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colNa
  */
 static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName)
 {
-	if (strcmp("N", data[5]) == 0)
+	if (strcmp("N", data[5]) == 0)//Comprueba si es una votación Normal o una Alternativa
 	{
 		Votacion *vot = new Votacion();
 		vot->setId(std::stoi(data[0]));
@@ -412,7 +188,8 @@ bool comprobarNumero(int num, int max)
 	return false;
 }
 
-void recuento() {
+void recuento()
+{
     string candidatos;
     cout << "Deberás poner a continuación todos los participantes de esta votación, separados por comas y un espacio: ";
     fflush(stdin);
@@ -477,29 +254,31 @@ void recuento() {
 		delete[] nombres;
 		delete[] listaOpcion;
     }
-     if (metodo == 2){
-    	 string orden;
-    	 vAlternativo** listaVotos = new vAlternativo*[numCand];
-    	 int x = 0;
-    	 int* listaOrden = new int[numCand];
-    	 int numPers;
-    	 int ord;
-    	 cout << "¿Cuántas personas votarán?" << endl;
-    	 cin >> numPers;
-    	 for(int i = 0; i < numPers; i++){
-    		 ord = 0;
-    		 cout << "Persona nº"<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas, usando sus IDs." << endl;
-    		 for (int o = 0; o < numCand; o++){
-    			 cout << nombres[o] << " tiene el ID " << o + 1 << endl;
-    		 }
-    		// cout << "Hola??"<< endl;
-    		 fflush(stdin);
-    		 getline (cin, orden);
-    	//	 fflush(stdout);
-    		// orden = "3, 2, 1, 4";
-    		 pos = 0;
-    		 while ((pos = orden.find(delimiter)) != string::npos)
-    		 {
+     if (metodo == 2)
+     {
+		 string orden;
+		 vAlternativo** listaVotos = new vAlternativo*[numCand];
+		 int x = 0;
+		 int* listaOrden = new int[numCand];
+		 int numPers;
+		 int ord;
+		 cout << "¿Cuántas personas votarán?" << endl;
+		 cin >> numPers;
+		 for(int i = 0; i < numPers; i++)
+		 {
+			 ord = 0;
+			 cout << "Persona nº"<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas, usando sus IDs." << endl;
+			 for (int o = 0; o < numCand; o++){
+				 cout << nombres[o] << " tiene el ID " << o + 1 << endl;
+			 }
+			// cout << "Hola??"<< endl;
+			 fflush(stdin);
+			 getline (cin, orden);
+		//	 fflush(stdout);
+			// orden = "3, 2, 1, 4";
+			 pos = 0;
+			 while ((pos = orden.find(delimiter)) != string::npos)
+			 {
 				 token = orden.substr(0, pos);
 				 stringstream geek(token);
 				 x = 0;
@@ -508,43 +287,33 @@ void recuento() {
 			   //  cout << listaOrden[i] << endl;
 				 orden.erase(0, pos + delimiter.length());
 				 ord++;
-    		     }
-    		 stringstream geek(orden);
-    		 geek >> x;
-    		 listaOrden[ord] = x;
+				 }
+			 stringstream geek(orden);
+			 geek >> x;
+			 listaOrden[ord] = x;
 
-    		 vAlternativo *voto = new vAlternativo(listaOrden, 0, numCand);
-    		 listaVotos[i] = voto;
+			 vAlternativo *voto = new vAlternativo(listaOrden, 0, numCand);
+			 listaVotos[i] = voto;
 
-    	 }
-    	 for (i = 0; i < numPers ; i++ ){
-    		 listaVotos[i]->imprimirValternativo(numCand);
-    	 }
-    	 Opcion** listaOp = new Opcion*[numCand];
-    	 VotacionAlter* votAlt = new VotacionAlter();
-    	 votAlt->setId(nVotaciones + 1);
-    	 votAlt->setFecha_inicio(0);
-    	 votAlt->setFecha_fin(0);
-    	 votAlt->setTipoVotacion("A");
-    	 votAlt->setNombreVotacion("Recuento Manual");
-    	 votAlt->setNParticipantes(numCand);
-    	 votAlt->setParticipantes(listaOp);
-    	 votAlt->setNum_VA(numPers);
-    	 votAlt->setAlternativos(listaVotos);
+		 }
+		 for (i = 0; i < numPers ; i++ ){
+			 listaVotos[i]->imprimirValternativo(numCand);
+		 }
+		 Opcion** listaOp = new Opcion*[numCand];
+		 VotacionAlter* votAlt = new VotacionAlter();
+		 votAlt->setNParticipantes(numCand);
+		 votAlt->setParticipantes(listaOp);
+		 votAlt->setNumVotantes(numPers);
+		 votAlt->setAlternativos(listaVotos);
 
-//    	 for (i = 0; i < numPers ; i++ )
-//    	 {
-//    		 listaVotos[i].imprimirValternativo(numCand);
-//    	 }
+	//    	 for (i = 0; i < numPers ; i++ )
+	//    	 {
+	//    		 listaVotos[i].imprimirValternativo(numCand);
+	//    	 }
 
-    	 for(i = 0; i < numPers; i++){
-    		 votAlt->getAlternativo(i)->imprimirValternativo(numCand);
-    	 }
-    	 int ganante = votAlt->terminarVot();
-    	 cout << "Ha ganado: " << nombres[ganante - 1 ] << ", con ID: " << ganante - 1 << endl;
-    	 delete[] listaOp;
-
-
+		 int ganante = votAlt->terminarVot();
+		 cout << "Ha ganado: " << nombres[ganante - 1 ] << ", con ID: " << ganante << endl;
+		 votAlt->setGanador(nombres[ganante - 1].c_str());
      } if (metodo != 1 && metodo != 2) {
     	 cout <<"No se ha dado un método valido" << endl;
      }
@@ -552,12 +321,8 @@ void recuento() {
 
 bool comprobarFecha(/*char*/ string stringf)
 {
-	// int f_size = sizeof(f) / sizeof(char);
-	// string stringf = convertToString(f, f_size);
-
 	if(stringf.length() != 10)
 	{
-		// cout<<"mec"<<endl;
 		return false;
 	}
 
@@ -629,7 +394,8 @@ void historial()
         cout << "¿Que votacion desea cerrar? \n" << endl;
         cin >> numero;
         numero -=1;
-        cout << listadoVotaciones[numero]->terminarVot() << endl;
+        int idGanador = listadoVotaciones[numero]->terminarVot();
+        cout << listadoVotaciones[numero]->getGanador() << endl;
         break;
 
 
@@ -662,7 +428,7 @@ void creaVotacion(Votacion *v)
 	int nCandidatos;
 	Opcion **opciones;
 
-	bool bNombre = false;
+	bool bNombre = false;//Estos se usarán para saber que se han introducido los datos necesarios.
 	bool bCandidatos = false;
 	bool bPeriodo = false;
 
@@ -674,7 +440,7 @@ void creaVotacion(Votacion *v)
 				cout << "1. Nombre\n2. Candidatos\n3. Periodo\n4. Aceptar\n" << endl;
 				int key2;
 				cin >> key2;
-				if(!comprobarNumero(key2, 5))
+				if(!comprobarNumero(key2, 4))
 					{
 						cout << "\n";
 						break;
@@ -694,15 +460,12 @@ void creaVotacion(Votacion *v)
 					cout << "Introduce el número de candidatos: " <<endl;
 					cin >> nCandidatos;
 					v->setNParticipantes(nCandidatos);
-					//IMPORTANTE: AL DECLARAR ESTO SE ESTÁN HACIENDO TANTAS OPCIONES CON EL CONSTRUCTOR
-					//VACÍO COMO nCandidatos. No hay que volver a crearlas luego.
 					opciones = new Opcion*[nCandidatos];
 
-					int i;
-
-					for (i = 0; i < nCandidatos; i++) {
+					for (int i = 0; i < nCandidatos; i++)
+					{
 						char nomCandidato[20];
-						cout << "\nIntroduce el Nombre del candidato " << i+1 << ":" << endl;
+						cout << "\nIntroduce el nombre del candidato " << i+1 << ":" << endl;
 						cin >> nomCandidato;
 						Opcion* op = new Opcion(i+1, 0, nomCandidato);
 						opciones[i] = op;
@@ -726,13 +489,6 @@ void creaVotacion(Votacion *v)
 
 					if (comprobarFecha(fIni) && comprobarFecha(fFin))
 					{
-//						int nIni = fIni.length();
-//						char charFIni[nIni + 1];
-//						strcpy(charFIni, fIni.c_str());
-//						int nFin = fFin.length();
-//						char charFFin[nFin + 1];
-//						strcpy(charFFin, fFin.c_str());
-
 						cout << "Las fechas se han introducido correctamente." << endl;
 						v->setFecha_inicio(convierteFecha(fIni));
 						v->setFecha_fin(convierteFecha(fFin));
@@ -750,9 +506,8 @@ void creaVotacion(Votacion *v)
 					if(bNombre && bCandidatos && bPeriodo)
 					{
 						finNuevaVotacion = true;
-						//v->imprimirVotacion();
 
-						ostringstream insertVotaciones;//(ID_V, NOMBRE, GANADOR, F_INI, F_FIN, TIPO_VOTACION, VOT_ABIERTA)
+						ostringstream insertVotaciones;
 						insertVotaciones << "INSERT INTO votacion VALUES (";
 						insertVotaciones << v->getId() << ", '" << v->getNombreVotacion() << "', '";
 						insertVotaciones << v->getGanador() << "', '" << v->getFecha_inicio() << "', '";
@@ -772,8 +527,7 @@ void creaVotacion(Votacion *v)
 						}
 
 						anyadirVotacion(v);
-//						(*VotacionAlter)
-						//v->imprimirVotacion();
+
 						cout << "Votación creada correctamente.\n" << endl;
 						fflush(stdout);
 
@@ -794,24 +548,20 @@ void creaVotacion(Votacion *v)
 						cout << endl;
 					}
 					break;
-
-				default:
-					fflush(stdout);
-					printf("Error, introduce una opción válida.\n");
-					finNuevaVotacion = true;
-
-					break;
 				}
 			}
 }
 
+/*
+ * Actualiza los ganadores de las votaciones que hay en la BD.
+ */
 void guardarEnBD()
 {
 	for (int i = 0; i < nVotaciones; ++i)
 	{
 		ostringstream updateGanador;
-		updateGanador << "UPDATE votacion SET GANADOR = " << listadoVotaciones[i]->getGanador();
-		updateGanador << " WHERE ID = " << listadoVotaciones[i]->getId() << ";";
+		updateGanador << "UPDATE votacion SET GANADOR = '" << listadoVotaciones[i]->getGanador();
+		updateGanador << "' WHERE ID = " << listadoVotaciones[i]->getId() << ";";
 		sqlite3_exec(db, updateGanador.str().c_str(), NULL, 0, NULL);
 	}
 }
@@ -833,7 +583,6 @@ void votar()
     cin >> cod;
     p1.setCodigo(cod);
 
-    //listadoVotaciones[nVotaciones - 1].imprimirVotacion();
     cout << "Elegir votación: (Introduce el numero de la votacion en la que desee participar)" << endl;
 
     for (int i = 0; i< nVotaciones;i++)
@@ -857,54 +606,6 @@ void votar()
 
 void menu()
 {
-//	Votacion *v = new Votacion[2];
-//	int id = 1;
-//
-//	char *ganador = "Juan";
-//	char *nombre_vot = "HOLA_SOY UNA VOTACIONALTER";
-//	char *ganador_2 = "MARTA";
-//	char *nombre_vot_2 = "HOLA_SOY UNA VOTACION";
-//	char *tipo ="A";
-//	char *tipo_2 = "N";
-//	int fecha_ini = 0; sadvdsfsdvsdasdvsvsdvcsdv
-//	int fecha_fin = 0;
-//	int nParticipantes = 3;
-//	char * nombre1 = "Pepe";
-//	char *nombre2 = "Juan";
-//	char *nombre3 = "Teresa";
-//
-//	Opcion o(1, 0, nombre1);
-//	Opcion o1(2, 0, nombre2);
-//	Opcion o2(3, 9, nombre3);
-//
-//	Opcion *lista_o[] = {&o, &o1, &o2};
-//
-//	int num_VA = 2;
-//	int *idOpciones = new int[3];
-//	idOpciones[0] = 1;
-//	idOpciones[1] = 3;
-//	idOpciones[2] = 2;
-//	vAlternativo v1(idOpciones, 0, 3);
-//
-//	int *idOpciones1 = new int[3];
-//	idOpciones1[0] = 1;
-//	idOpciones1[1] = 2;
-//	idOpciones1[2] = 3;
-//	vAlternativo v2(idOpciones1, 0, 3);
-//
-//	vAlternativo *va[] = {&v1, &v2};
-//
-//
-//	VotacionAlter vo1(id, fecha_ini, fecha_fin, tipo, ganador, nombre_vot, nParticipantes, lista_o, num_VA, va );
-//	Votacion vot1(2, fecha_ini, fecha_fin, tipo_2, ganador_2, nombre_vot_2, nParticipantes, lista_o);
-//	v[0] = vo1;
-//	v[1] = vot1;
-
-
-
-//	VotacionAlter* vAlt = new VotacionAlter();
-//	vAlt->setNombreVotacion(name);
-//	vAlt->setFecha_fin(con)
 	int tipoVot = 0;
 	bool finPrograma = false;
 	while(!finPrograma)
@@ -912,15 +613,16 @@ void menu()
 			cout << "1. Crear Votación\n2. Votar\n3. Recuento\n4. Historial/Cerrar Votación\n5. Acabar y guardar" << endl;
 			int key = 0;
 			cin >> key;
+
 			if(!comprobarNumero(key, 5)) return;
-			//cout << "Has metido: " << key << endl;
+
 			cout << endl;
 			switch (key)
 			{
 			case 1:
 				cout << "Elige el método de votación:\n1.First Pass The Post\n2. Segunda Instantánea" << endl;
-
 				cin >> tipoVot;
+
 				if(tipoVot == 1)
 				{
 					Votacion* vot = new Votacion();
@@ -938,8 +640,6 @@ void menu()
 				} else {
 					cout << "Introduce una opción correcta." << endl;
 				}
-//				VotacionAlter* l = dynamic_cast<VotacionAlter*> (&listadoVotaciones[nVotaciones]);
-				//(*VotacionAlter)(listadoVotaciones[nVotaciones].imprimirVotacion();
 				break;
 
 			case 2:
@@ -950,12 +650,12 @@ void menu()
 				recuento();
 				break;
 
-			case 4: //Aquí mostrar la actual (WIP) (Esto será el historial)
+			case 4:
 				historial();
 				break;
 
 			case 5:
-				//guardarEnBD();
+				guardarEnBD();
 				finPrograma = true;
 				cout << "Fin del programa." << endl;
 				break;
@@ -985,8 +685,9 @@ int main()
 	cout << "nVotaciones: " << nVotaciones << endl;
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
 
-	contador = 0;
-	//sqlite3_exec(db, "SELECT * FROM CANDIDATO WHERE ID_VOT = 0", cuentaCandidatosBD, 0, NULL);
+	contador = 0; 	//Lo ponemos a 0 porque anteriormente se ha estado usando para meter las votaciones en la
+					//posición correspondiente. Ahora se usará para meter los candidatos en la votación apropiada.
+
 	for (int i = 0; i < nVotaciones; ++i)
 	{
 		ostringstream sentencia1;

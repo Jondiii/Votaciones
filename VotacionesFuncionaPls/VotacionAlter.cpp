@@ -5,31 +5,28 @@
  *      Author: Jon
  */
 
-
 #include "VotacionAlter.h"
 #include "Votacion.h"
 #include "VAlternativo.h"
 #include <string.h>
 #include <iostream>
 
-
 using namespace std;
-
 
 VotacionAlter::VotacionAlter(int id, int fecha_inicio, int fecha_fin, const char* tipoVotacion, const char* ganador, const char* nombreVotacion, int nParticipantes, Opcion * paticipantes[], int num_VA, vAlternativo* alternativos[]):Votacion(id, fecha_inicio, fecha_fin,tipoVotacion, ganador, nombreVotacion, nParticipantes,paticipantes)
 {
-	this->num_VA = num_VA;
-	this->alternativos = new vAlternativo*[this->num_VA];
-	for (int i = 0; i <this->num_VA;i++)
+	this->numVotantes = num_VA;
+	this->alternativos = new vAlternativo*[this->numVotantes];
+	for (int i = 0; i <this->numVotantes;i++)
 	{
 		this->alternativos[i] = alternativos[i];
 	}
 }
 VotacionAlter::VotacionAlter(const VotacionAlter &va):Votacion(va)
 {
-	this->num_VA = va.num_VA;
-	this->alternativos = new vAlternativo*[this->num_VA];
-	for (int i = 0; i <this->num_VA;i++)
+	this->numVotantes = va.numVotantes;
+	this->alternativos = new vAlternativo*[this->numVotantes];
+	for (int i = 0; i <this->numVotantes;i++)
 	{
 		this->alternativos[i] = va.alternativos[i];
 	}
@@ -37,15 +34,15 @@ VotacionAlter::VotacionAlter(const VotacionAlter &va):Votacion(va)
 VotacionAlter::VotacionAlter():Votacion()
 {
 	this->alternativos = new vAlternativo*[0];
-	this->num_VA = 0;
+	this->numVotantes = 0;
 }
 VotacionAlter::~VotacionAlter()
 {
 	delete [] alternativos;
 }
-int VotacionAlter::getNum_VA()
+int VotacionAlter::getNumVotantes()
 {
-	return this->num_VA;
+	return this->numVotantes;
 }
 vAlternativo* VotacionAlter::getAlternativo(int i)
 {
@@ -66,13 +63,13 @@ void VotacionAlter::setParticipantes(Opcion* opciones[])
 void VotacionAlter::setAlternativos(vAlternativo* alternativo[])
 {
 	this->alternativos = new vAlternativo*[this->nParticipantes];
-	for (int i = 0;  i < this->nParticipantes; i ++)
+	for (int i = 0;  i < this->numVotantes; i ++)
 	{
 		this->alternativos[i] = alternativo[i];
 	}
 }
-void VotacionAlter::setNum_VA(int numero){
-	this-> num_VA = numero;
+void VotacionAlter::setNumVotantes(int numero){
+	this-> numVotantes = numero;
 }
 void VotacionAlter::setId(int id)
 {
@@ -99,22 +96,27 @@ void VotacionAlter::setNombreVotacion(const char* nombreVotacion)
 }
 void VotacionAlter::anadirvAlternativo(vAlternativo *alternativo)
 {
-	int nuevo_Va = this->num_VA + 1;
+	int nuevo_Va = this->numVotantes + 1;
 	vAlternativo **vA = new vAlternativo*[nuevo_Va];
-	for (int i = 0 ; i <this->num_VA; i++)
+	for (int i = 0 ; i <this->numVotantes; i++)
 	{
 		vA[i] = this->alternativos[i];
 	}
-	vA[this->num_VA] = alternativo;
-	this->num_VA = nuevo_Va;
+	vA[this->numVotantes] = alternativo;
+	this->numVotantes = nuevo_Va;
 	this->alternativos = new vAlternativo*[nuevo_Va];
-	for (int i = 0 ; i <this->num_VA; i++)
+	for (int i = 0 ; i <this->numVotantes; i++)
 	{
 		this->alternativos[i] = vA[i];
 	}
 }
 void VotacionAlter::votar()
 {
+	if (!this->votAbiero)
+	    {
+	        cout << "La Votacion ya esta cerrada"<<endl;
+	        return;
+	    }
 	cout << "PARTICIPANTES:" << endl;
 	for (int i = 0; i< this->getnParticipantes() ;i++)
 	{
@@ -135,7 +137,8 @@ void VotacionAlter::votar()
 	this->anadirvAlternativo(v1);
 }
 
-void VotacionAlter::vaciador(int cantidadOpciones, int *resultados){
+void VotacionAlter::vaciador(int cantidadOpciones, int *resultados)
+{
 
 	for (int x = 0; x < cantidadOpciones; ++x) {
 		resultados[x] = 0;
@@ -143,13 +146,14 @@ void VotacionAlter::vaciador(int cantidadOpciones, int *resultados){
 
 }
 
-int VotacionAlter::terminarVot(){
+int VotacionAlter::terminarVot()
+{
 //	int SegundaInstantanea(vAlternativo *va[], int cantidadDeVotos, int cantidadOpciones){
 		int resultados[this->nParticipantes];
 
 		int eliminados[this->nParticipantes];
 		vaciador(this->nParticipantes, eliminados);
-		cout <<"votos"<<this->num_VA << endl;
+		cout <<"votos"<<this->numVotantes << endl;
 		cout <<"opciones"<<this->nParticipantes << endl;
 		cout <<"--"<<eliminados[2] << endl;
 
@@ -158,8 +162,8 @@ int VotacionAlter::terminarVot(){
 		int resultadosTemp[this->nParticipantes];
 
 		//array con todos los votos
-		vAlternativo * votos[this->num_VA];
-		for (int i = 0; i < this->num_VA; ++i) {
+		vAlternativo * votos[this->numVotantes];
+		for (int i = 0; i < this->numVotantes; ++i) {
 			votos[i] = this->alternativos[i];
 
 			cout <<"holaaa?????" << this->alternativos[i]->getIdOpciones()[0] <<endl;
@@ -168,7 +172,7 @@ int VotacionAlter::terminarVot(){
 
 		int votosNecesarios;
 
-		votosNecesarios = ((this->num_VA/2) + 1)	; //<---------------------------------------[][][][]
+		votosNecesarios = ((this->numVotantes/2) + 1)	; //<---------------------------------------[][][][]
 			fflush(stdout);
 			printf("Votosnecesarios = %i\n", votosNecesarios);
 
@@ -207,7 +211,7 @@ int VotacionAlter::terminarVot(){
 	//		cout << votos[2]->getIdOpciones()[0] <<endl;
 	//		cout << votos[3]->getIdOpciones()[0] <<endl;
 	//		cout<<"1 For"<< endl;
-			for (int i = 0;   i < this->num_VA; ++i) {
+			for (int i = 0;   i < this->numVotantes; ++i) {
 	//			fflush(stdout);
 	//			printf("\n entro 333333333333333333333333333333333    POR %i\n", i);
 
@@ -308,18 +312,18 @@ int VotacionAlter::terminarVot(){
 
 	//			cout<<"3 For"<< endl;
 
-				for (int q = 0;  q < this->num_VA; ++ q) {
+				for (int q = 0;  q < this->numVotantes; ++ q) {
 	//				cout<<"primera opcion votante"<< q <<":"<< (votos[q]->getIdOpciones()[0]) << endl<< endl;
 				}
 	//			cout<<"POSICIOOOOON"<< endl;
-				for (int q = 0;  q < this->num_VA; ++ q) {
+				for (int q = 0;  q < this->numVotantes; ++ q) {
 
 	//				cout<<"posicion"<< q <<":"<< eliminados[q] << endl;
 				}
 
 
 
-				for (int l = 0; l < this->num_VA; ++l) {
+				for (int l = 0; l < this->numVotantes; ++l) {
 					//while(Eliminado == 0){
 	//				cout<<"IIIIIIIIIIIIIIIIINNN3 For"<< endl;
 					SWeliminado = 1;

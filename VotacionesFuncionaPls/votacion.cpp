@@ -2,6 +2,7 @@
 #include "Votacion.h"
 #include <string.h>
 #include <iostream>
+#include <sstream>
 #include "Persona.h"
 
 #include "VAlternativo.h"
@@ -144,10 +145,25 @@ void Votacion::setNombreVotacion(const char* nombreVotacion)
 }
 void Votacion::imprimirVotacion()
 {
-	cout <<"ID [ "<< this->getId() << " ] "<< "NOMBRE : ( "<< this->nombreVotacion <<  " ) " << "INICIO: "<< this->fecha_inicio << " FIN: "<< this->fecha_fin << endl;
+	ostringstream fIni;
+	fIni << to_string(this->fecha_inicio).substr(0, 4) << "/";
+	fIni << to_string(this->fecha_inicio).substr(4, 2) << "/";
+	fIni << to_string(this->fecha_inicio).substr(6, 2);
+
+	ostringstream fFin;
+	fFin << to_string(this->fecha_fin).substr(0, 4) << "/";
+	fFin << to_string(this->fecha_fin).substr(4, 2) << "/";
+	fFin << to_string(this->fecha_fin).substr(6, 2);
+
+	cout << "NOMBRE: "<< this->nombreVotacion <<  " " << "INICIO: ["<< fIni.str().c_str() << "] FIN: ["<< fFin.str().c_str() << "]" << endl;
 }
 void Votacion::votar()
 {
+	if (!this->votAbiero)
+	    {
+	        cout << "La Votacion ya esta cerrada"<<endl;
+	        return;
+	    }
 	cout << "PARTICIPANTES: " << endl;
 	for (int i = 0; i< this->getnParticipantes() ;i++)
 	{
