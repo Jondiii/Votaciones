@@ -16,6 +16,7 @@ extern "C" {
 #include "votacion.h"
 #include "VotacionAlter.h"
 
+#include <typeinfo>
 #include <unistd.h>
 #include <sstream>
 #include <iostream>
@@ -31,7 +32,7 @@ int nCandidatos = 0;
 int candidatosTotales = 0;
 int contador = 0;
 
-Votacion* listadoVotaciones;
+Votacion** listadoVotaciones;
 
 //void vaciador(int cantidadOpciones, int *resultados){
 //    for (int x = 0; x < cantidadOpciones; ++x) {
@@ -269,13 +270,13 @@ int firstPassThePost2(Opcion Opciones[], int cantidadOpciones){
 void anyadirVotacion(Votacion *vot)
 {
     nVotaciones ++;
-    Votacion *vota = new Votacion[nVotaciones];
+    Votacion **vota = new Votacion*[nVotaciones];
     for(int i = 0; i <nVotaciones-1; i++)
     {
         vota[i] = listadoVotaciones[i];
       //vota[i].imprimirVotacion();
     }
-    vota[nVotaciones - 1] = *vot;
+    vota[nVotaciones - 1] = vot;
 //  vota[nVotaciones].imprimirVotacion();
     listadoVotaciones = vota;
 
@@ -358,7 +359,7 @@ static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colNa
 	op->setId(nCandidatos);
 	op->setNombre(data[1]);
 	op->setVotos(std::stoi(data[2]));
-	listadoVotaciones[contador].getOpciones()[nCandidatos] = op;
+	listadoVotaciones[contador]->getOpciones()[nCandidatos] = op;
 
 	nCandidatos++;
 
@@ -375,13 +376,15 @@ static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colNa
  */
 static int creaVotacionesBD(void *unused, int nCols, char **data, char **colName)
 {
-	listadoVotaciones[contador].setId(std::stoi(data[0]));
-	listadoVotaciones[contador].setNombreVotacion(data[1]);
-	listadoVotaciones[contador].setGanador(data[2]);
-	listadoVotaciones[contador].setFecha_inicio(std::stoi(data[3]));
-	listadoVotaciones[contador].setFecha_fin(std::stoi(data[4]));
-	listadoVotaciones[contador].setTipoVotacion(data[5]);
+	Votacion *vot = new Votacion();
+	vot->setId(std::stoi(data[0]));
+	vot->setNombreVotacion(data[1]);
+	vot->setGanador(data[2]);
+	vot->setFecha_inicio(std::stoi(data[3]));
+	vot->setFecha_fin(std::stoi(data[4]));
+	vot->setTipoVotacion(data[5]);
 
+	listadoVotaciones[contador] = vot;
 	contador++;
 	return 0;
 }
@@ -532,28 +535,28 @@ void historial()
     case 1:
         for (int i = 0; i < nVotaciones; i++){
             cout << i + 1 <<". ";
-            listadoVotaciones[i].imprimirVotacion();
+            listadoVotaciones[i]->imprimirVotacion();
         }
         cout << "¿Que votacion desea cerrar? \n" << endl;
         cin >> numero;
         numero -=1;
-        cout << listadoVotaciones[numero].terminarVot() << endl;
+        cout << listadoVotaciones[numero]->terminarVot() << endl;
         break;
 
 
     case 2:
         for (int i = 0; i<nVotaciones; i++){
             cout << i + 1 <<". ";
-            listadoVotaciones[i].imprimirVotacion();
+            listadoVotaciones[i]->imprimirVotacion();
         }
         cout << "¿Que votacion desea ver? \n" << endl;
         cin >> numero;
         numero -=1;
         cout << "CANDIDATOS:" << endl;
-        for (int i = 0; i<listadoVotaciones[numero].getnParticipantes(); i++)
+        for (int i = 0; i<listadoVotaciones[numero]->getnParticipantes(); i++)
         {
             cout << i + 1 <<". ";
-            listadoVotaciones[numero].getOpcion(i)->imprimirOpcion();
+            listadoVotaciones[numero]->getOpcion(i)->imprimirOpcion();
         }
         break;
 
@@ -571,7 +574,6 @@ void creaVotacion(Votacion *v)
 	Opcion **opciones;
 
 	bool bNombre = false;
-	bool bTipo = false;
 	bool bCandidatos = false;
 	bool bPeriodo = false;
 
@@ -580,7 +582,7 @@ void creaVotacion(Votacion *v)
 
 			while(!finNuevaVotacion)
 			{
-				cout << "1. Nombre\n2. Sistema de votación\n3. Candidatos\n4. Periodo\n5. Aceptar\n" << endl;
+				cout << "1. Nombre\n2. Candidatos\n3. Periodo\n4. Aceptar\n" << endl;
 				int key2;
 				cin >> key2;
 				if(!comprobarNumero(key2, 5)) break;
@@ -596,32 +598,6 @@ void creaVotacion(Votacion *v)
 					break;
 
 				case 2:
-					fflush(stdin);
-					cout << "1. FPP\n2. Alternativa\nIntroduce el tipo de votación: ";
-					fflush(stdout);
-					int tipoVotacion;
-					cin >> tipoVotacion;
-					if(!comprobarNumero(tipoVotacion, 2)) break;
-					switch(tipoVotacion)
-					{
-					case 1:
-						v->setTipoVotacion("N");//La opción normal, la FPP
-						bTipo = true;
-						break;
-					case 2:
-						v->setTipoVotacion("A");//La opción alternativa.
-						bTipo = true;
-						break;
-					default:
-						cout << "Introduce una opción correcta." << endl;
-						break;
-					}
-
-					cout << "\n";
-
-					break;
-
-				case 3:
 					cout << "Introduce el número de candidatos: " <<endl;
 					cin >> nCandidatos;
 					v->setNParticipantes(nCandidatos);
@@ -646,7 +622,7 @@ void creaVotacion(Votacion *v)
 					bCandidatos = true;
 					break;
 
-				case 4:
+				case 3:
 					cout << "Introduce la fecha de inicio en el formato AAAA/MM/DD: ";
 					fflush(stdin);
 					getline(cin, fIni);
@@ -678,8 +654,8 @@ void creaVotacion(Votacion *v)
 
 					break;
 
-				case 5:
-					if(bNombre && bTipo && bCandidatos && bPeriodo)
+				case 4:
+					if(bNombre && bCandidatos && bPeriodo)
 					{
 						finNuevaVotacion = true;
 						//v->imprimirVotacion();
@@ -704,7 +680,8 @@ void creaVotacion(Votacion *v)
 						}
 
 						anyadirVotacion(v);
-
+//						(*VotacionAlter)
+						//v->imprimirVotacion();
 						cout << "Votación creada correctamente.\n" << endl;
 						fflush(stdout);
 
@@ -713,10 +690,6 @@ void creaVotacion(Votacion *v)
 						if(bNombre == false)
 						{
 							cout << "nombre, ";
-						}
-						if(bTipo == false)
-						{
-							cout << "el tipo de votación, ";
 						}
 						if(bCandidatos == false)
 						{
@@ -745,8 +718,8 @@ void guardarEnBD()
 	for (int i = 0; i < nVotaciones; ++i)
 	{
 		ostringstream updateGanador;
-		updateGanador << "UPDATE votacion SET GANADOR = " << listadoVotaciones[i].getGanador();
-		updateGanador << " WHERE ID = " << listadoVotaciones[i].getId() << ";";
+		updateGanador << "UPDATE votacion SET GANADOR = " << listadoVotaciones[i]->getGanador();
+		updateGanador << " WHERE ID = " << listadoVotaciones[i]->getId() << ";";
 		sqlite3_exec(db, updateGanador.str().c_str(), NULL, 0, NULL);
 	}
 }
@@ -774,20 +747,20 @@ void votar()
     for (int i = 0; i< nVotaciones;i++)
     {
         cout << i + 1 <<". ";
-        listadoVotaciones[i].imprimirVotacion();
+        listadoVotaciones[i]->imprimirVotacion();
     }
 
     int votacion_elegida;
     cin >> votacion_elegida;
     votacion_elegida -= 1;
-    if (!Persona::comprobarDni(p1.getDni(), listadoVotaciones[votacion_elegida].getId()))
+    if (!Persona::comprobarDni(p1.getDni(), listadoVotaciones[votacion_elegida]->getId()))
     {
         cout << "Ya has votado en esta VOTACION."<<endl;
         return;
     }
 
-    listadoVotaciones[votacion_elegida].votar();
-    p1.insertarPersonaDB(listadoVotaciones[votacion_elegida].getId());
+    listadoVotaciones[votacion_elegida]->votar();
+    p1.insertarPersonaDB(listadoVotaciones[votacion_elegida]->getId());
 }
 
 void menu()
@@ -835,9 +808,12 @@ void menu()
 //	v[0] = vo1;
 //	v[1] = vot1;
 
-	Votacion* vot = new Votacion();
-	vot->setId(nVotaciones);
 
+
+//	VotacionAlter* vAlt = new VotacionAlter();
+//	vAlt->setNombreVotacion(name);
+//	vAlt->setFecha_fin(con)
+	int tipoVot = 0;
 	bool finPrograma = false;
 	while(!finPrograma)
 		{
@@ -850,7 +826,28 @@ void menu()
 			switch (key)
 			{
 			case 1:
-				creaVotacion(vot);
+				cout << "Elige el método de votación:\n1.First Pass The Post\n2. Segunda Instantánea" << endl;
+
+				cin >> tipoVot;
+				if(tipoVot == 1)
+				{
+					Votacion* vot = new Votacion();
+					vot->setId(nVotaciones);
+					vot->setTipoVotacion("N");
+					creaVotacion(vot);
+
+				} else if(tipoVot == 2)
+				{
+					VotacionAlter* vot = new VotacionAlter();
+					vot->setId(nVotaciones);
+					vot->setTipoVotacion("A");
+					creaVotacion(vot);
+
+				} else {
+					cout << "Introduce una opción correcta." << endl;
+				}
+//				VotacionAlter* l = dynamic_cast<VotacionAlter*> (&listadoVotaciones[nVotaciones]);
+				//(*VotacionAlter)(listadoVotaciones[nVotaciones].imprimirVotacion();
 				break;
 
 			case 2:
@@ -891,7 +888,7 @@ int main()
 
 	//Cuenta cuántas votaciones hay en la BD.
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", cuentaVotacionesBD, 0, NULL);
-	listadoVotaciones = new Votacion[nVotaciones];
+	listadoVotaciones = new Votacion*[nVotaciones];
 
 	cout << "nVotaciones: " << nVotaciones << endl;
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
@@ -904,7 +901,7 @@ int main()
 		sentencia1 << "SELECT * FROM CANDIDATO WHERE ID_VOT = "  << i << ";";
 		sqlite3_exec(db, sentencia1.str().c_str(), cuentaCandidatosBD, 0, NULL);
 
-		listadoVotaciones[i].setNParticipantes(nCandidatos);
+		listadoVotaciones[i]->setNParticipantes(nCandidatos);
 		candidatosTotales += nCandidatos;
 		nCandidatos = 0;
 		sqlite3_exec(db, sentencia1.str().c_str(), anyadeCandidatosBD, 0, NULL);
@@ -914,7 +911,6 @@ int main()
 
 	cout << "candidatosTotales: " << candidatosTotales << endl;
 
-	//hola
 	creaBD();
 	menu();
 

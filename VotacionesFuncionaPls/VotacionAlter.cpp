@@ -34,6 +34,11 @@ VotacionAlter::VotacionAlter(const VotacionAlter &va):Votacion(va)
 		this->alternativos[i] = va.alternativos[i];
 	}
 }
+VotacionAlter::VotacionAlter():Votacion()
+{
+	this->alternativos = new vAlternativo*[0];
+	this->num_VA = 0;
+}
 VotacionAlter::~VotacionAlter()
 {
 	delete [] alternativos;
@@ -90,7 +95,6 @@ void VotacionAlter::vaciador(int cantidadOpciones, int *resultados){
 	}
 
 }
-
 
 int VotacionAlter::terminarVot(){
 //	int SegundaInstantanea(vAlternativo *va[], int cantidadDeVotos, int cantidadOpciones){

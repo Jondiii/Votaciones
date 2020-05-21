@@ -43,7 +43,6 @@ public:
 
 	virtual void votar();
 	virtual int terminarVot();
-
 	void imprimirVotacion();
 };
 

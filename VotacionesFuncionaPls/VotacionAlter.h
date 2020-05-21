@@ -20,6 +20,7 @@ class VotacionAlter: public Votacion
 public:
 	VotacionAlter(int id, int fecha_inicio, int fecha_fin, const char* tipoVotacion, const char* ganador, const char* nombreVotacion, int nParticipantes, Opcion * paticipantes[], int num_VA, vAlternativo *alternativos[]);
 	VotacionAlter(const VotacionAlter &);
+	VotacionAlter();
 	virtual ~VotacionAlter();
 
 	int getNum_VA();
@@ -28,7 +29,5 @@ public:
 
 	virtual int terminarVot();
 	virtual void votar();
-
-
 };
 #endif /* VOTACIONALTER_H_ */
