@@ -82,10 +82,11 @@ void Opcion::updateBD(int id)
 	sqlite3_stmt * stmt;
 	ostringstream updateCan;
 	updateCan << "UPDATE candidato SET VOTOS = " << this->votos;
-	updateCan << " WHERE ID = " << id << " AND NOMBRE =" << this->nombre << ";";
+	updateCan << " WHERE ID_VOT = " << id << " AND NOMBRE ='" << this->nombre << "';";
 	if (sqlite3_open("votaciones.sql", &db) == SQLITE_OK)
 	{
-		sqlite3_exec(db, updateCan.str().c_str(), NULL, 0, NULL);
+		sqlite3_prepare( db,updateCan.str().c_str(), -1, &stmt, NULL );
+		sqlite3_step( stmt );
 	}
 	sqlite3_finalize(stmt);
 	sqlite3_close(db);

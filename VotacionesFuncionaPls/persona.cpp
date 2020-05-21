@@ -93,8 +93,8 @@ void Persona::insertarPersonaDB(int id)
     sqlite3_stmt * stmt;
     sqlite3_stmt * stmt_1;
     sqlite3_stmt * stmt_2;
-    string sqlstatement = "INSERT INTO persona VALUES(" + to_string(this->getDni()) + "," + to_string(this->getEdad()) + "," + to_string(this->getCodigo()) + ");";
-    string sqlstatement_2 = "INSERT INTO votos VALUES(" + to_string(id) + "," +to_string(this->getDni()) + ");";
+    string sqlstatement = "INSERT INTO persona VALUES(" + to_string(this->getDni()) + ", " + to_string(this->getEdad()) + ", " + to_string(this->getCodigo()) + ");";
+    string sqlstatement_2 = "INSERT INTO votos VALUES(" + to_string(id) + ", " +to_string(this->getDni()) + ");";
 
     if (sqlite3_open("votaciones.sql", &db) == SQLITE_OK)
     {

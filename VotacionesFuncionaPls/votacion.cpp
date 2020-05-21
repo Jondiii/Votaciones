@@ -159,6 +159,7 @@ void Votacion::votar()
 	cin >> numero;
 	numero -= 1;
 	this->getOpcion(numero)->incrementarVotos();
+	this->getOpcion(numero)->updateBD(this->getId());
 }
 void Votacion::setOpcion(Opcion op, int num)
 {
