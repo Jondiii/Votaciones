@@ -4,6 +4,17 @@
 #include "Opcion.h"
 
 class Votacion{
+	/*
+	 * int id : identificador de la votación
+	 * char* ganador : nombre de la opción ganadora
+	 * char* nombreVotacion : nombre de la votacion
+	 * int nParticipantes : numero de
+	 * int fecha_inicio : fecha de inicio de la votacion
+	 * int fecha_fin : fecha de fin de la votacion
+	 * char* tipoVotacion : tipo de votación
+	 * Opcion ** participantes : Array de opciones
+	 * bool votAbiero : indica si la votación esta abierta
+	 */
 protected:
 	int id;
 	char* ganador;

@@ -110,112 +110,95 @@ void VotacionAlter::vaciador(int cantidadOpciones, int *resultados)
 	}
 }
 
+//devuelve la id del ganador.
 int VotacionAlter::terminarVot()
 {
-//	int SegundaInstantanea(vAlternativo *va[], int cantidadDeVotos, int cantidadOpciones){
-		int resultados[this->nParticipantes];
 
-		int eliminados[this->nParticipantes];
-		vaciador(this->nParticipantes, eliminados);
-		cout <<"votos"<<this->numVotantes << endl;
-		cout <<"opciones"<<this->nParticipantes << endl;
-		cout <<"--"<<eliminados[2] << endl;
+	int resultados[this->nParticipantes];
+	int eliminados[this->nParticipantes];
+
+	vaciador(this->nParticipantes, eliminados);
 
 
-		//array con todos los votos
-		vAlternativo * votos[this->numVotantes];
-		for (int i = 0; i < this->numVotantes; ++i)
-		{
-			votos[i] = this->alternativos[i];
+	//array con todos los votos
+	vAlternativo * votos[this->numVotantes];
+	for (int i = 0; i < this->numVotantes; ++i)
+	{
+		votos[i] = this->alternativos[i];
+	}
+
+
+	int votosNecesarios;
+	//calculo cuantos votos son el 50% + 1
+	votosNecesarios = ((this->numVotantes/2) + 1);
+	fflush(stdout);
+	printf("Votosnecesarios = %i\n", votosNecesarios);
+
+	int numVotTemp;
+	int numResTemp;
+	int Elimin;
+	int SWeliminado;
+	int ganador;
+	int hayGanador = 0;
+	int noResultado = 0;
+	int contador = 0;
+
+	while(hayGanador == 0 && noResultado == 0 && contador < this->nParticipantes ){
+		contador = contador + 1;
+
+		vaciador(this->nParticipantes, resultados);
+
+		//intento sacar cual de las opciones tiene más votos
+		for (int i = 0;   i < this->numVotantes; ++i) {
+			numVotTemp = votos[i]->getIdOpciones()[0];
+			numResTemp = resultados[numVotTemp - 1];
+			numResTemp = numResTemp + 1;
+			resultados[numVotTemp - 1] = numResTemp;
 		}
 
-
-		int votosNecesarios;
-
-		votosNecesarios = ((this->numVotantes/2) + 1);
-		fflush(stdout);
-		printf("Votosnecesarios = %i\n", votosNecesarios);
-
-		int numVotTemp;
-		int numResTemp;
-		int Elimin;
-		int SWeliminado;
-		int ganador;
-		int hayGanador = 0;
-		int noResultado = 0;
-		int contador = 0;
-
-		while(hayGanador == 0 && noResultado == 0 && contador < this->nParticipantes ){
-			contador = contador + 1;
-
-			vaciador(this->nParticipantes, resultados);
-
-			for (int i = 0;   i < this->numVotantes; ++i) {
-
-				numVotTemp = votos[i]->getIdOpciones()[0];
-
-				numResTemp = resultados[numVotTemp - 1];
-
-				numResTemp = numResTemp + 1;
-
-				resultados[numVotTemp - 1] = numResTemp;
-
+		//Miro si la opcion con mas votos pasa los votos necesa
+		for (int j = 0; j < this->nParticipantes; ++j) {
+			numVotTemp = resultados[j];
+			if (numVotTemp >= votosNecesarios){
+				ganador = j;
+				hayGanador = 1;
+				this->votAbiero = false;
+				return ganador + 1;
 			}
+		}
 
-			for (int x = 0; x < this->nParticipantes; ++x) {
-			}
-
-			for (int j = 0; j < this->nParticipantes; ++j) {
-
-				numVotTemp = resultados[j];
-
-				if (numVotTemp >= votosNecesarios){
-					ganador = j;
-					hayGanador = 1;
-
-					this->votAbiero = false;
-					return ganador + 1;
-
-
+		//
+		if (hayGanador == 0) {
+			numVotTemp = resultados[0];
+			Elimin = 0;
+			for (int k = 1; k < this->nParticipantes; ++k) {
+				if(eliminados[k] == 1 ){
+				}else{
+					if (numVotTemp > resultados[k] || eliminados[Elimin] ==1){
+						fflush(stdout);
+						numVotTemp = resultados[k];
+						Elimin = k;
+					}
 				}
 			}
-			if (hayGanador == 0) {
-
-				numVotTemp = resultados[0];
-				Elimin = 0;
-
-				for (int k = 1; k < this->nParticipantes; ++k) {
-
-					 if(eliminados[k] == 1 ){
-					 }else{
-
-						 if (numVotTemp > resultados[k] || eliminados[Elimin] ==1){
-							 fflush(stdout);
-							 numVotTemp = resultados[k];
-
-							 Elimin = k;
-
-						 }
-					 }
-				}
-
-				eliminados[Elimin] = 1;
-				for (int l = 0; l < this->numVotantes; ++l) {
-					SWeliminado = 1;
-					while  (SWeliminado == 1){
-						if (eliminados[(votos[l]->getIdOpciones()[0]) - 1] == 1) {
-							SWeliminado = 1;
-							for (int n = 1; n < this->nParticipantes; ++n) {
-								votos[l]->getIdOpciones()[n - 1] = votos[l]->getIdOpciones()[n];
-							}
-						}else{
-							SWeliminado = 0;
+			eliminados[Elimin] = 1;
+			for (int l = 0; l < this->numVotantes; ++l) {
+				SWeliminado = 1;
+				while  (SWeliminado == 1){
+					if (eliminados[(votos[l]->getIdOpciones()[0]) - 1] == 1) {
+						SWeliminado = 1;
+						for (int n = 1; n < this->nParticipantes; ++n) {
+							votos[l]->getIdOpciones()[n - 1] = votos[l]->getIdOpciones()[n];
 						}
+					}else{
+						SWeliminado = 0;
 					}
 				}
 			}
 		}
-		this->votAbiero = false;
-		return -1;
+	}
+	this->votAbiero = false;
+	return -1;
 
 }
+
