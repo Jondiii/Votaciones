@@ -41,7 +41,6 @@ void anyadirVotacion(Votacion *vot)
     for(int i = 0; i <nVotaciones-1; i++)
     {
         vota[i] = listadoVotaciones[i];
-      //vota[i].imprimirVotacion();
     }
     vota[nVotaciones - 1] = vot;
     listadoVotaciones = vota;
@@ -124,7 +123,7 @@ static int cuentaCandidatosBD(void *unused, int nCols, char **data, char **colNa
 static int anyadeCandidatosBD(void *unused, int nCols, char **data, char **colName)
 {
 	Opcion* op = new Opcion();
-	op->setId(nCandidatos + 1);
+	op->setId(nCandidatos);
 	op->setNombre(data[1]);
 	op->setVotos(std::stoi(data[2]));
 	listadoVotaciones[contador]->getOpciones()[nCandidatos] = op;
