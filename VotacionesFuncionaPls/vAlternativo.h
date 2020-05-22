@@ -8,7 +8,7 @@
 #ifndef VALTERNATIVO_H_
 #define VALTERNATIVO_H_
 
-class vAlternativo{
+class vAlternativo{//Voto Alternativo
 	int* idOpciones;	// [5,4,3,1,2] (id de las opciones en el orden que las ha puesto el votante)
 	int paso;
 public:
