@@ -16,7 +16,7 @@ using namespace std;
 VotacionAlter::VotacionAlter(int id, int fecha_inicio, int fecha_fin, const char* tipoVotacion, const char* ganador, const char* nombreVotacion, int nParticipantes, Opcion * paticipantes[], int num_VA, vAlternativo* alternativos[]):Votacion(id, fecha_inicio, fecha_fin,tipoVotacion, ganador, nombreVotacion, nParticipantes,paticipantes)
 {
 	this->numVotantes = num_VA;
-	this->alternativos = new vAlternativo*[this->numVotantes];
+	this->alternativos = new vAlternativo*[this->nParticipantes];
 	for (int i = 0; i <this->numVotantes;i++)
 	{
 		this->alternativos[i] = alternativos[i];
@@ -25,7 +25,7 @@ VotacionAlter::VotacionAlter(int id, int fecha_inicio, int fecha_fin, const char
 VotacionAlter::VotacionAlter(const VotacionAlter &va):Votacion(va)
 {
 	this->numVotantes = va.numVotantes;
-	this->alternativos = new vAlternativo*[this->numVotantes];
+	this->alternativos = new vAlternativo*[this->nParticipantes];
 	for (int i = 0; i <this->numVotantes;i++)
 	{
 		this->alternativos[i] = va.alternativos[i];
@@ -80,7 +80,7 @@ void VotacionAlter::anadirvAlternativo(vAlternativo *alternativo)
 void VotacionAlter::votar()
 {
 	cout << "PARTICIPANTES:" << endl;
-	for (int i = 0; i< this->getnParticipantes() ;i++)
+	for (int i = 0; i< this->getnParticipantes(); i++)
 	{
 		cout << i + 1 <<". ";
 		this->getOpcion(i)->imprimirOpcion();
@@ -97,15 +97,17 @@ void VotacionAlter::votar()
 	}
 	vAlternativo *v1 = new vAlternativo(votos, 0, this->getnParticipantes());
 	this->anadirvAlternativo(v1);
+//	for (int i = 0; i < this->getNumVotantes(); ++i) {
+//		this->getAlternativo(i)->imprimirValternativo(this->getnParticipantes());
+//	}
+
 }
 
 void VotacionAlter::vaciador(int cantidadOpciones, int *resultados)
 {
-
 	for (int x = 0; x < cantidadOpciones; ++x) {
 		resultados[x] = 0;
 	}
-
 }
 
 int VotacionAlter::terminarVot()

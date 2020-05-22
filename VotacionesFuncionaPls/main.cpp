@@ -44,15 +44,7 @@ void anyadirVotacion(Votacion *vot)
       //vota[i].imprimirVotacion();
     }
     vota[nVotaciones - 1] = vot;
-//  vota[nVotaciones].imprimirVotacion();
     listadoVotaciones = vota;
-
-//    for(int i = 0; i <nVotaciones; i++)
-//    {
-////    	fflush(stdout);
-//        listadoVotaciones[i] = vota[i];
-////      listadoVotaciones[i].imprimirVotacion();
-//    }
 }
 
 void creaBD()
@@ -192,7 +184,7 @@ bool comprobarNumero(int num, int max)
 	return false;
 }
 
-void recuento()
+void recuento() //Este método permite hacer una votación rápida, teniendo a mano todos los votos.
 {
     string candidatos;
     cout << "Deberás poner a continuación todos los participantes de esta votación, separados por comas y un espacio: ";
@@ -202,7 +194,7 @@ void recuento()
     string delimiter = ", ";
     size_t pos = 0;
     int numCand = 0;
-    while ((pos = candidatosCopia.find(delimiter)) != string::npos) {
+    while ((pos = candidatosCopia.find(delimiter)) != string::npos) { //Para saber el número de candidatos
         candidatosCopia.erase(0, pos + delimiter.length());
         numCand++;
     }
@@ -211,7 +203,7 @@ void recuento()
     string token;
     string* nombres = new string[numCand];
     int i = 0;
-    while ((pos = candidatos.find(delimiter)) != string::npos) {
+    while ((pos = candidatos.find(delimiter)) != string::npos) { //Separar los nombres y meterlos en un array para después poder manipularlos
         token = candidatos.substr(0, pos);
         nombres[i] = token;
         candidatos.erase(0, pos + delimiter.length());
@@ -223,21 +215,21 @@ void recuento()
      int metodo;
      cout<< "Elije qué método de votación quieres usar:\n1.FPP\n2.Segunda Instantanea" << endl;
      cin >> metodo;
-     if(metodo == 1){
+     if(metodo == 1){ //Recuento mediante First Pass the Post
 		 int o = 0;
-		 Opcion **listaOpcion = new Opcion*[numCand];
-		 while (o < numCand){
+		 Opcion **listaOpcion = new Opcion*[numCand]; //Necesitamos array de opciones
+		 while (o < numCand){ //Para saber cuántos votos tiene cada candidato
 			 cout << "¿Cuántos votos ha obtenido " << nombres[o] << "?" << endl;
 			 int voto = 0;
 			 cin >> voto;
 
-			 Opcion* option = new Opcion(o + 1, voto, nombres[o].c_str());
+			 Opcion* option = new Opcion(o + 1, voto, nombres[o].c_str()); //Se crea una opción por cada candidato
 			 listaOpcion[o] = option;
 			 option->imprimirOpcion();
 			 o++;
 		 }
 
-		Votacion* vot = new Votacion();
+		Votacion* vot = new Votacion();  //Creamos una votación con los datos obtenidos para que me calcule un ganador
 		vot->setId(nVotaciones);
 		vot->setFecha_inicio(0);
 		vot->setFecha_fin(0);
@@ -246,12 +238,7 @@ void recuento()
 		vot->setNParticipantes(numCand);
 		vot->setParticipantes(listaOpcion);
 
-		int idGanador = vot->terminarVot();
-
-		for (int i = 0; i < vot->getnParticipantes(); ++i)
-		{
-			vot->getOpcion(i)->imprimirOpcion();
-		}
+		int idGanador = vot->terminarVot(); //Calcula el ganador
 
 		if(idGanador == 0)
 		{
@@ -262,12 +249,12 @@ void recuento()
 		}
 
     }
-     if (metodo == 2)
+     if (metodo == 2) //Recuento por Segunda Instantánea
      {
 		 string orden;
-		 vAlternativo** listaVotos = new vAlternativo*[numCand];
+		 vAlternativo** listaVotos = new vAlternativo*[numCand]; //Lista de vAlternativos que necesitamos para calcular el ganador
 		 int x = 0;
-		 int* listaOrden = new int[numCand];
+		 int* listaOrden = new int[numCand]; //Necesitaremos el array orden para saber el orden de preferencia de los participantes
 		 int numPers;
 		 int ord;
 		 cout << "¿Cuántas personas votarán?" << endl;
@@ -278,34 +265,32 @@ void recuento()
 			cout << "Persona nº "<< i + 1 << ", di los "<< numCand << " candidatos en el orden que quieras, separado por comas y un espacio, usando sus IDs." << endl;
 			for (int o = 0; o < numCand; o++){
 			cout << nombres[o] << " tiene el ID " << o + 1 << "." << endl;
-		 }
-			 fflush(stdin);
-			 getline (cin, orden);
+			}
+		  fflush(stdin);
+		  getline (cin, orden);
 
-			 pos = 0;
-			 while ((pos = orden.find(delimiter)) != string::npos)
-			 {
-				 token = orden.substr(0, pos);
-				 stringstream geek(token);
-				 x = 0;
-				 geek >> x;
-				 listaOrden[ord] = x;
-				 orden.erase(0, pos + delimiter.length());
-				 ord++;
-				 }
-			 stringstream geek(orden);
-			 geek >> x;
-			 listaOrden[ord] = x;
+		  pos = 0;
+		  while ((pos = orden.find(delimiter)) != string::npos) //Para meter el orden dentro de la lista
+		  {
+			  token = orden.substr(0, pos);
+			  stringstream geek(token);
+			  x = 0;
+			  geek >> x;
+			  listaOrden[ord] = x;
+			  orden.erase(0, pos + delimiter.length());
+			  ord++;
+		  }
+		  stringstream geek(orden);
+		  geek >> x;
+		  listaOrden[ord] = x;
 
-			 vAlternativo *voto = new vAlternativo(listaOrden, 0, numCand);
-			 listaVotos[i] = voto;
+		  vAlternativo *voto = new vAlternativo(listaOrden, 0, numCand); //Creamos los vAlternativo para poder meterlos en la listaVotos por cada participante
+		  listaVotos[i] = voto;
 
 		 }
-		 for (i = 0; i < numPers ; i++ ){
-			 listaVotos[i]->imprimirValternativo(numCand);
-		 }
-		 Opcion** listaOp = new Opcion*[numCand];
-		 VotacionAlter* votAlt = new VotacionAlter();
+
+		 Opcion** listaOp = new Opcion*[numCand]; //Lista vacía, porque lo necesita la VotacionAlter
+		 VotacionAlter* votAlt = new VotacionAlter(); //Creamos la VotaciónAlter para poder calcular un ganador
 		 votAlt->setNParticipantes(numCand);
 		 votAlt->setParticipantes(listaOp);
 		 votAlt->setNumVotantes(numPers);
@@ -329,7 +314,7 @@ void recuento()
      }
 }
 
-bool comprobarFecha(/*char*/ string stringf)
+bool comprobarFecha(/*char*/ string stringf) //Metodo para ver si la fecha si está bien metida, devuelve true si está bien
 {
 	if(stringf.length() != 10)
 	{
@@ -341,10 +326,10 @@ bool comprobarFecha(/*char*/ string stringf)
 	string delimiter = "/";
 	string token;
 	size_t pos = 0;
-	int *fechas = new int[3];
+	int *fechas = new int[3]; //Creamos el array de ints para poder separar cada trozo de la fecha y poder manipularlas
 	int i = 0;
 	int x = 0;
-	while ((pos = copiaF.find(delimiter)) != string::npos)
+	while ((pos = copiaF.find(delimiter)) != string::npos) //Separamos la fecha por los /
 	{
 		token = copiaF.substr(0, pos);
 		copiaF.erase(0, pos + delimiter.length());
@@ -359,28 +344,26 @@ bool comprobarFecha(/*char*/ string stringf)
 	geek >> x;
 	fechas[i] = x;
 
-	if(fechas[0] <= 1800 || fechas[0] > 2100 || fechas[1] > 12 || fechas[1] < 1 || fechas[2] > 31 || fechas[2] < 1)
+	if(fechas[0] <= 1800 || fechas[0] > 2100 || fechas[1] > 12 || fechas[1] < 1 || fechas[2] > 31 || fechas[2] < 1) //Si un solo de los trozos de la fecha está mal, devuelve false
 		{
-			delete[] fechas;
 			return false;
 		}
 
-	delete[] fechas;
-	return true;
+	return true; //Si está bien llega hasta aquí y devuelve true
 }
 
-int convierteFecha(string fecha){
-    string nuevaFech;
+int convierteFecha(string fecha){ //Este método convierte la fecha de AAAA/MM/DD a AAAAMMDD
+    string nuevaFech; //Aquí vamos metiendo los trozos separados
     string delimiter = "/";
     string token;
     size_t pos = 0;
-    while ((pos = fecha.find(delimiter)) != string::npos) {
+    while ((pos = fecha.find(delimiter)) != string::npos) { //Separamos la fecha y lo añadimos al nuevaFech
         token = fecha.substr(0, pos);
         fecha.erase(0, pos + delimiter.length());
         nuevaFech.append(token);
     }
     nuevaFech.append(fecha);
-    stringstream geek(nuevaFech);
+    stringstream geek(nuevaFech); //Convertimos el string a int
     int x = 0;
     geek >> x;
     return x;
@@ -416,7 +399,7 @@ void historial()
 
         idGanador = listadoVotaciones[numero]->terminarVot();
         listadoVotaciones[numero]->setGanador(listadoVotaciones[numero]->getOpcion(idGanador)->getNombre());
-        cout << "Ha ganado: " << listadoVotaciones[numero]->getGanador() << "." << endl;
+        cout << "Ha ganado: " << listadoVotaciones[numero]->getGanador() << "con ID: " << idGanador << endl;
 
         cerrarVot << "UPDATE votacion SET VOT_ABIERTA = 0 WHERE ID_V = " << numero << ";";
         sqlite3_exec(db, cerrarVot.str().c_str(), NULL, 0, NULL);
@@ -440,7 +423,7 @@ void historial()
         }
 
   	  int fin;
-  	  cout << "Escribe algo y pulsa intro cuando hayas acabado de consultar las votaciones." << endl;
+  	  cout << "Escribe un número cualquiera y pulsa intro cuando hayas acabado de consultar las votaciones." << endl;
   	  cin >> fin;
   	  cout << "\n";
 
@@ -499,7 +482,6 @@ void creaVotacion(Votacion *v)
 						cin >> nomCandidato;
 						Opcion* op = new Opcion(i+1, 0, nomCandidato);
 						opciones[i] = op;
-
 						opciones[i]->imprimirOpcion();
 					}
 
@@ -625,19 +607,22 @@ void votar()
     cin >> votacion_elegida;
     votacion_elegida -= 1;
 
+    // comprueba si la votación está abierta - devuelve true si está abierta - false si está cerrada
     if(!listadoVotaciones[votacion_elegida]->getVotAbierta())
     {
-    	cout << "La votación ya está cerrrada." << endl;
-    	return;
+        cout << "La votación ya está cerrrada." << endl;
+        return;
     }
-
+    // comprueba que una persona no pueda votar más de una vez en una misma votación.
     if (!Persona::comprobarDni(p1.getDni(), listadoVotaciones[votacion_elegida]->getId()))
     {
         cout << "Ya has votado en esta votación."<<endl;
         return;
     }
-
+    //gestiona el voto dependiendo del tipo clase que sea. - Votacion o VotacionAlter
     listadoVotaciones[votacion_elegida]->votar();
+
+    // inserta a la persona y a la votacion y el voto - solo se inserta a la persona en caso de que no exista previamente en la BD
     p1.insertarPersonaDB(listadoVotaciones[votacion_elegida]->getId());
 }
 
@@ -741,6 +726,13 @@ int main()
 
 	creaBD();
 	menu();
+
+	for (int i = 0; i < nVotaciones; ++i)
+	{
+		delete [] listadoVotaciones[i];
+	}
+
+	delete [] listadoVotaciones;
 
 	sqlite3_close(db);
 }
