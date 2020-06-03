@@ -40,9 +40,9 @@ void anyadirVotacion(Votacion *vot)
     Votacion **vota = new Votacion*[nVotaciones];
     for(int i = 0; i <nVotaciones-1; i++)
     {
-        vota[i] = listadoVotaciones[i];
+        vota[i] = listadoVotaciones[i];//Se añaden todas las votaciones que había
     }
-    vota[nVotaciones - 1] = vot;
+    vota[nVotaciones - 1] = vot; //En último lugar se añade el nuevo
     listadoVotaciones = vota;
 }
 
@@ -215,9 +215,10 @@ void recuento() //Este método permite hacer una votación rápida, teniendo a m
      cout<< "Elije qué método de votación quieres usar:\n1.FPP\n2.Segunda Instantanea" << endl;
      cin >> metodo;
      if(metodo == 1){ //Recuento mediante First Pass the Post
-		 int o = 0;
+		 int o = 0;//Actúa como ID en el bucle.
 		 Opcion **listaOpcion = new Opcion*[numCand]; //Necesitamos array de opciones
-		 while (o < numCand){ //Para saber cuántos votos tiene cada candidato
+		 while (o < numCand)
+		 { //Para saber cuántos votos tiene cada candidato
 			 cout << "¿Cuántos votos ha obtenido " << nombres[o] << "?" << endl;
 			 int voto = 0;
 			 cin >> voto;
@@ -237,7 +238,7 @@ void recuento() //Este método permite hacer una votación rápida, teniendo a m
 		vot->setNParticipantes(numCand);
 		vot->setParticipantes(listaOpcion);
 
-		int idGanador = vot->terminarVot(); //Calcula el ganador
+		int idGanador = vot->terminarVot(); //Calcula el ganador. Devuelve el id del ganador, y un 0 si es un empate.
 
 		if(idGanador == 0)
 		{
@@ -266,7 +267,7 @@ void recuento() //Este método permite hacer una votación rápida, teniendo a m
 			cout << nombres[o] << " tiene el ID " << o + 1 << "." << endl;
 			}
 		  fflush(stdin);
-		  getline (cin, orden);
+		  getline (cin, orden);//Aquí se guarda el string que tiene los votos (1, 2, 3, 5)
 
 		  pos = 0;
 		  while ((pos = orden.find(delimiter)) != string::npos) //Para meter el orden dentro de la lista
@@ -332,7 +333,7 @@ bool comprobarFecha(/*char*/ string stringf) //Metodo para ver si la fecha si es
 	{
 		token = copiaF.substr(0, pos);
 		copiaF.erase(0, pos + delimiter.length());
-		stringstream geek(token);
+		stringstream geek(token); //Geek pasa de string a int.
 		x = 0;
 		geek >> x;
 		fechas[i] = x;
@@ -341,7 +342,7 @@ bool comprobarFecha(/*char*/ string stringf) //Metodo para ver si la fecha si es
 	stringstream geek(copiaF);
 	x = 0;
 	geek >> x;
-	fechas[i] = x;
+	fechas[i] = x; //Se añade el trozo que sobra
 
 	if(fechas[0] <= 1800 || fechas[0] > 2100 || fechas[1] > 12 || fechas[1] < 1 || fechas[2] > 31 || fechas[2] < 1) //Si un solo de los trozos de la fecha está mal, devuelve false
 		{
@@ -702,6 +703,7 @@ int main()
 	//Cuenta cuántas votaciones hay en la BD.
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", cuentaVotacionesBD, 0, NULL);
 	listadoVotaciones = new Votacion*[nVotaciones];
+
 
 	sqlite3_exec(db, "SELECT * FROM VOTACION;", creaVotacionesBD, 0, NULL);
 

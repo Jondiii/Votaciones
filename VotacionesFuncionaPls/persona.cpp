@@ -38,7 +38,7 @@ void Persona::setEdad(int edad)
 	this->edad = edad;
 }
 
-bool Persona::comprobarDni(int dni, int id)
+bool Persona::comprobarDni(int dni, int id)//id de l votación.
 {
     bool no_coincidencia = true;
     sqlite3 *db;

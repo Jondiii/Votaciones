@@ -179,7 +179,7 @@ void Votacion::votar()
 	cin >> numero;
 	numero -= 1;
 	this->getOpcion(numero)->incrementarVotos();
-	this->getOpcion(numero)->updateBD(this->getId());
+	this->getOpcion(numero)->updateBD(this->getId()); //Actualiza los votos del candidato
 }
 void Votacion::setOpcion(Opcion op, int num)
 {
@@ -187,13 +187,15 @@ void Votacion::setOpcion(Opcion op, int num)
     this->participantes[num]->setNombre(op.getNombre());
     this->participantes[num]->setVotos(op.getVotos());
 }
-int Votacion::terminarVot(){
-//    int firstPassThePost2(Opcion Opciones[], int cantidadOpciones){
-    Opcion * opcionGuar = this->participantes[0];
-    int cantGuar; //= punteroOpciones->getVotos();
+int Votacion::terminarVot()
+{
+    Opcion * opcionGuar = this->participantes[0];//Se coge la primera opción.
+    int cantGuar;
     int empate = 0;
 
-    for (int i = 1;  i < this->nParticipantes ; ++ i) {
+    for (int i = 1;  i < this->nParticipantes ; ++ i) {//Se va comparando la opción guardada con la siguiente opción (opcionCar).
+    													//Si opcion guardada es menor que opcion car, se guarda la opcion cargada en la g
+    													//guardada. Queda la que tiene más votos.
         Opcion * opcionCar = this->participantes[i];
         if (opcionGuar->getVotos() < opcionCar->getVotos()) {
             cantGuar = opcionCar->getVotos();
